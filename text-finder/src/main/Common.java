@@ -1,4 +1,4 @@
-package textfinder;
+package main;
 /**
  *
  */

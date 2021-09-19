@@ -1,4 +1,4 @@
-package textfinder;
+package main;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,8 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,7 +22,7 @@ public class Main {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = LogManager.getLogger();
+	private static final Logger logger = LogManager.getLogger(Main.class);
 
 	/**
 	 * Current path
