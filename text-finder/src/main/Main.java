@@ -53,10 +53,10 @@ public class Main {
 			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
 			prop.load(fis);
 		} catch (FileNotFoundException e) {
-			log("ERROR config.properties not found");
+			logger.error("config.properties not found");
 			return;
 		} catch (IOException e) {
-			log("ERROR config.properties not found");
+			logger.error("config.properties not found");
 			return;
 		}
 
@@ -69,7 +69,7 @@ public class Main {
 		try {
 			readConfig();
 		} catch (Exception e) {
-			log(e.getMessage());
+			logger.error(e.getMessage());
 			return;
 		}
 	}
@@ -86,9 +86,9 @@ public class Main {
 		// Check if config excel exists
 		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
 		if (fileWorkBook.exists()) {
-			log("INFO Found config file");
+			logger.info("Found config file");
 		} else {
-			log("ERRO Config file not exists");
+			logger.error("Config file not exists");
 			return;
 		}
 
@@ -115,40 +115,29 @@ public class Main {
 
 		// Check if correctly config
 		if (Common.isNullOrEmpty(getProp("app.version"))) {
-			log("ERROR Config: Missing app.version property");
+			logger.error("Config: Missing app.version property");
 			return false;
 		} else if (Common.isNullOrEmpty(getProp("config.file"))) {
-			log("ERROR Config: Missing config.file property");
+			logger.error("Config: Missing app.version property");
 			return false;
 		} else if (Common.isNullOrEmpty(getProp("config.sheet"))) {
-			log("ERROR Config: Missing config.sheet property");
+			logger.error("Config: Missing app.version property");
 			return false;
 		} else if (Common.isNullOrEmpty(getProp("config.search.path.col"))) {
-			log("ERROR Config: Missing config.search.path.col property");
+			logger.error("Config: Missing config.search.path.col property");
 			return false;
 		} else if (Common.isNullOrEmpty(getProp("config.search.path.row"))) {
-			log("ERROR Config: Missing config.search.path.row property");
+			logger.error("Config: Missing config.search.path.row property");
 			return false;
 		}
 
 		// If config version different from app version, throw error
 		if (!appVersion.equals(getProp("app.version"))) {
-			log("ERROR App Version do not match Config Version");
+			logger.error("App Version do not match Config Version");
 			return false;
 		}
 
 		return true;
-	}
-
-	/**
-	 * Write console log
-	 * @param msg Message
-	 */
-	private static void log(String msg) {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-
-		System.out.println(sdf.format(date) + " " + msg);
 	}
 
 	/**
@@ -158,7 +147,6 @@ public class Main {
 	 * @return Property Value
 	 */
 	private static String getProp(String key) {
-
 		return prop.getProperty(key);
 	}
 }
