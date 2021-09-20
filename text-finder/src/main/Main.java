@@ -152,6 +152,10 @@ public class Main {
 		workbook.close();
 	}
 
+	/**
+	 * Check if Config file is valid
+	 * @return
+	 */
 	private static boolean isValidConfig() {
 
 		// Check if correctly config
