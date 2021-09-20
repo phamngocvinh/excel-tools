@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,6 +35,11 @@ public class Main {
 	 * Proerties
 	 */
 	private static Properties prop = new Properties();
+	
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = LogManager.getLogger(Main.class);
 
 	/**
 	 * Main class
