@@ -13,15 +13,16 @@
 	
 	<!-- Get libraries -->
 	<target name="libs">
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.14.1/log4j-api-2.14.1.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.14.1/log4j-core-2.14.1.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/poi/poi/5.0.0/poi-5.0.0.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml/5.0.0/poi-ooxml-5.0.0.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml-lite/5.0.0/poi-ooxml-lite-5.0.0.jar" dest="lib" />
-		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/xmlbeans/xmlbeans/5.0.1/xmlbeans-5.0.1.jar" dest="lib" />
+		<mkdir dir="${user.dir}/lib" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar" dest="${user.dir}/lib" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.14.1/log4j-api-2.14.1.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.14.1/log4j-core-2.14.1.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/poi/poi/5.0.0/poi-5.0.0.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml/5.0.0/poi-ooxml-5.0.0.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml-lite/5.0.0/poi-ooxml-lite-5.0.0.jar" dest="${user.dir}/lib/" />
+		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/xmlbeans/xmlbeans/5.0.1/xmlbeans-5.0.1.jar" dest="${user.dir}/lib/" />
 	</target>
 
 	<target name="init">
