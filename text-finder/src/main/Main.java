@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +24,16 @@ public class Main {
 	private static final String appVersion = "0.1";
 
 	/**
+	 * Proerties
+	 */
+	private static Properties prop = new Properties();
+
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = LogManager.getLogger(Main.class);
+
+	/**
 	 * Current path
 	 */
 	private static final String dir = System.getProperty("user.dir");
@@ -32,14 +44,19 @@ public class Main {
 	private static String name_config = "config.properties";
 
 	/**
-	 * Proerties
+	 * Config: Search path
 	 */
-	private static Properties prop = new Properties();
-	
+	private static String config_search_path = "";
+
 	/**
-	 * Logger
+	 * Config: Is Search in Folder
 	 */
-	private static final Logger logger = LogManager.getLogger(Main.class);
+	private static boolean config_IsFolder = false;
+
+	/**
+	 * Config: Search Conditions
+	 */
+	private static List<String> config_SrchCond = new ArrayList<>();
 
 	/**
 	 * Main class
@@ -86,7 +103,7 @@ public class Main {
 		// Check if config excel exists
 		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
 		if (fileWorkBook.exists()) {
-			logger.info("Found config file");
+			logger.info("Read config.xlsx");
 		} else {
 			logger.error("Config file not exists");
 			return;
@@ -104,9 +121,33 @@ public class Main {
 			throw new Exception("Config sheet not found");
 		}
 
-		int col = Integer.parseInt(getProp("config.search.path.col")) - 1;
-		int row = Integer.parseInt(getProp("config.search.path.row")) - 1;
-		System.out.println(formatter.formatCellValue(sheet.getRow(row).getCell(col)));
+		// Get search path
+		int col_Path = Integer.parseInt(getProp("config.search.path.col")) - 1;
+		int row_Path = Integer.parseInt(getProp("config.search.path.row")) - 1;
+		config_search_path = formatter.formatCellValue(sheet.getRow(row_Path).getCell(col_Path));
+
+		// Check if search path is file or folder
+		if (Files.isDirectory(Path.of(config_search_path))) {
+			config_IsFolder = true;
+			logger.info("Search in " + config_search_path);
+		} else if (Files.isRegularFile(Path.of(config_search_path))) {
+			config_IsFolder = false;
+			logger.info("Search in " + config_search_path);
+		} else {
+			logger.error("Search path not exist. Check config.xlsx");
+			workbook.close();
+			return;
+		}
+
+		// Get Search Condition
+		int col_Cond = Integer.parseInt(getProp("config.search.cond.col")) - 1;
+		int row_Cond = Integer.parseInt(getProp("config.search.cond.row")) - 1;
+		int row_Last = sheet.getLastRowNum();
+
+		for (int idx = row_Cond; idx <= row_Last; idx++) {
+			config_SrchCond.add(formatter.formatCellValue(sheet.getRow(idx).getCell(col_Cond)));
+		}
+		logger.info("Search condition: " + config_SrchCond);
 
 		workbook.close();
 	}
