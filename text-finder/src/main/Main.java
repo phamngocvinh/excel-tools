@@ -23,6 +23,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -47,6 +48,11 @@ public class Main {
 	 * Current path
 	 */
 	private static final String dir = System.getProperty("user.dir");
+
+	/**
+	 * Seperator
+	 */
+	private static final String SEP = "&%&";
 
 	/**
 	 * Name: Config file name
@@ -134,7 +140,7 @@ public class Main {
 			// If search path is file
 			doSearch(new File(config_search_path));
 		}
-		
+
 		writeResult();
 
 		FileOutputStream outputStream;
@@ -146,23 +152,24 @@ public class Main {
 		} catch (IOException e) {
 			logger.error("Write Result IOException");
 		}
+
+		logger.info("Done");
 	}
-	
+
 	/**
 	 * Write Result to Workbook
 	 */
 	private static void writeResult() {
-		
+
 		XSSFSheet sheet = wb_Result.getSheet("Result");
-		
+
 		for (int idx = 0; idx < listResult.size(); idx++) {
-			String[] arr = listResult.get(idx).split("&%&");
-			
+			String[] arr = listResult.get(idx).split(SEP);
+
 			sheet.createRow(idx);
-			sheet.getRow(idx).createCell(0).setCellValue(arr[0]);
-			sheet.getRow(idx).createCell(1).setCellValue(arr[1]);
-			sheet.getRow(idx).createCell(2).setCellValue(arr[2]);
-			sheet.getRow(idx).createCell(3).setCellValue(arr[3]);
+			for (int rIdx = 0; rIdx < arr.length; rIdx++) {
+				sheet.getRow(idx).createCell(rIdx).setCellValue(arr[rIdx]);
+			}
 		}
 	}
 
@@ -193,8 +200,12 @@ public class Main {
 							if (!StringUtils.isBlank(cellVal)) {
 								for (String srchCond : config_SrchCond) {
 									if (srchCond.equals(cellVal)) {
-										listResult.add(srchCond + "&%&" + (cIdx + 1) + "&%&" + (rIdx + 2) + "&%&" + file.getName());
-										logger.info("Found: " + srchCond + " Location: " + (cIdx + 1) + " " + (rIdx + 2));
+										logger.info("Found " + srchCond + " at "
+												+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
+										String result = StringUtils.join(srchCond,
+												CellReference.convertNumToColString(cIdx), (rIdx + 2),
+												sheet.getSheetName(), file.getName(), file.getAbsolutePath(), SEP);
+										listResult.add(result);
 									}
 								}
 							}
