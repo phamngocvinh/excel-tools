@@ -172,7 +172,7 @@ Project Link: [https://github.com/phamngocvinh/excel-tools](https://github.com/p
 [license-shield]: https://img.shields.io/github/license/phamngocvinh/excel-tools?style=for-the-badge
 [license-url]: https://github.com/phamngocvinh/excel-tools/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/linkedin-blue?style=for-the-badge&logo=linkedin
-[linkedin-url]: https://www.linkedin.com/in/vinh-pham-ngoc-158785220
+[linkedin-url]: https://www.linkedin.com/in/phamngocvinh932
 [mail-shield]: https://img.shields.io/badge/Gmail-white?style=for-the-badge&logo=gmail
 [mail-url]: mailto:phamngocvinh@live.com
 [product-screenshot]: images/screenshot.jpg
