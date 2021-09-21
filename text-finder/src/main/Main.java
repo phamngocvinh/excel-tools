@@ -191,6 +191,8 @@ public class Main {
 				return;
 			}
 
+			logger.info("Processing " + file.getName());
+
 			for (int idx = 0; idx < workbook.getNumberOfSheets(); idx++) {
 				Sheet sheet = workbook.getSheetAt(idx);
 				for (int rIdx = 0; rIdx < sheet.getLastRowNum(); rIdx++) {
