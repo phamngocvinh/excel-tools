@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -157,21 +158,21 @@ public class Main {
 	 * @return
 	 */
 	private static boolean isValidConfig() {
-
+		
 		// Check if correctly config
-		if (Common.isNullOrEmpty(getProp("app.version"))) {
+		if (StringUtils.isBlank(getProp("app.version"))) {
 			logger.error("Config: Missing app.version property");
 			return false;
-		} else if (Common.isNullOrEmpty(getProp("config.file"))) {
+		} else if (StringUtils.isBlank(getProp("config.file"))) {
 			logger.error("Config: Missing app.version property");
 			return false;
-		} else if (Common.isNullOrEmpty(getProp("config.sheet"))) {
+		} else if (StringUtils.isBlank(getProp("config.sheet"))) {
 			logger.error("Config: Missing app.version property");
 			return false;
-		} else if (Common.isNullOrEmpty(getProp("config.search.path.col"))) {
+		} else if (StringUtils.isBlank(getProp("config.search.path.col"))) {
 			logger.error("Config: Missing config.search.path.col property");
 			return false;
-		} else if (Common.isNullOrEmpty(getProp("config.search.path.row"))) {
+		} else if (StringUtils.isBlank(getProp("config.search.path.row"))) {
 			logger.error("Config: Missing config.search.path.row property");
 			return false;
 		}
