@@ -20,12 +20,13 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+<h3 align="center">
+
 [![Download][download-shield]][download-url]
 [![Release][release-shield]][release-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
+</h3>
 
 <!-- PROJECT LOGO -->
 <br />
@@ -34,10 +35,10 @@
     <img src="images/icon-192x192.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Excel Tools</h3>
+  <h3 align="center">Automatic Engine</h3>
 
   <p align="center">
-    Microsoft Excel Utilities
+    Tool to rename multiple files name with variety of conditions
     <br />
     <a href="https://github.com/phamngocvinh/excel-tools"><strong>Explore the docs »</strong></a>
     <br />
@@ -82,13 +83,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://github.com/phamngocvinh/excel-tools/)
 
 ****** WIP ******
 
 ### Built With
 
-* [Ant](https://ant.apache.org/)
+* [Visual Studio](https://visualstudio.microsoft.com/vs/community/)
 
 
 <!-- GETTING STARTED -->
@@ -145,7 +146,8 @@ Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Pham Ngoc Vinh - phamngocvinh@live.com
+[![Mail][mail-shield]][mail-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
 Project Link: [https://github.com/phamngocvinh/excel-tools](https://github.com/phamngocvinh/excel-tools)
 
@@ -154,10 +156,8 @@ Project Link: [https://github.com/phamngocvinh/excel-tools](https://github.com/p
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* [Apache Ant](https://ant.apache.org/)
-* [Apache POI](https://poi.apache.org/)
-* [Apache Log4j2](https://logging.apache.org/log4j/2.x/)
-* [Apache Common API](https://www.apache.org/)
+* [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/)
+* [Windows Presentation Foundation](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/)
 * [Shields.io](https://shields.io)
 
 
@@ -171,6 +171,8 @@ Project Link: [https://github.com/phamngocvinh/excel-tools](https://github.com/p
 [issues-url]: https://github.com/phamngocvinh/excel-tools/issues
 [license-shield]: https://img.shields.io/github/license/phamngocvinh/excel-tools?style=for-the-badge
 [license-url]: https://github.com/phamngocvinh/excel-tools/blob/master/LICENSE
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-shield]: https://img.shields.io/badge/linkedin-blue?style=for-the-badge&logo=linkedin
 [linkedin-url]: https://linkedin.com/in/phamngocvinh
+[mail-shield]: https://img.shields.io/badge/Gmail-white?style=for-the-badge&logo=gmail
+[mail-url]: mailto:phamngocvinh@live.com
 [product-screenshot]: images/screenshot.jpg
