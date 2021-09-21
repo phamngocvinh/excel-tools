@@ -101,10 +101,10 @@ public class Main {
 			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
 			prop.load(fis);
 		} catch (FileNotFoundException e) {
-			logger.error("config.properties not found");
+			logger.error("FileNotFoundException: config.properties");
 			return;
 		} catch (IOException e) {
-			logger.error("config.properties not found");
+			logger.error("IOException: config.properties");
 			return;
 		}
 
@@ -119,10 +119,10 @@ public class Main {
 				return;
 			}
 		} catch (InvalidFormatException e1) {
-			logger.error("Config file InvalidFormatException");
+			logger.error("InvalidFormatException: Config file");
 			return;
 		} catch (IOException e1) {
-			logger.error("Config file IOException");
+			logger.error("IOException: Config file");
 			return;
 		}
 
@@ -148,9 +148,9 @@ public class Main {
 			outputStream = new FileOutputStream("Result.xlsx");
 			wb_Result.write(outputStream);
 		} catch (FileNotFoundException e) {
-			logger.error("Write Result FileNotFoundException");
+			logger.error("FileNotFoundException: Write Result");
 		} catch (IOException e) {
-			logger.error("Write Result IOException");
+			logger.error("IOException: Write Result");
 		}
 
 		logger.info("Done");
