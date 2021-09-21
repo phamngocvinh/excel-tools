@@ -35,10 +35,10 @@
     <img src="images/icon-192x192.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Automatic Engine</h3>
+  <h3 align="center">Excel Tools</h3>
 
   <p align="center">
-    Tool to rename multiple files name with variety of conditions
+    Excel Utilies
     <br />
     <a href="https://github.com/phamngocvinh/excel-tools"><strong>Explore the docs »</strong></a>
     <br />
