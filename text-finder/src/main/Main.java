@@ -204,9 +204,9 @@ public class Main {
 									if (srchCond.equals(cellVal)) {
 										logger.info("Found " + srchCond + " at "
 												+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
-										String result = StringUtils.join(srchCond,
+										String result = StringUtils.joinWith(SEP, srchCond,
 												CellReference.convertNumToColString(cIdx), (rIdx + 2),
-												sheet.getSheetName(), file.getName(), file.getAbsolutePath(), SEP);
+												sheet.getSheetName(), file.getName(), file.getAbsolutePath());
 										listResult.add(result);
 									}
 								}
