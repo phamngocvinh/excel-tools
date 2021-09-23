@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="Build" default="main" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="Build" default="build" basedir=".">
 	<description>
 		Create a Java Project (JAR) with Ant build script
 	</description>
@@ -91,6 +91,6 @@
 	</target>
 
 	<!-- Default, Run to build App -->
-	<target name="main" depends="clean, jar, lib, pack, zip" />
+	<target name="build" depends="clean, jar, lib, pack, zip" />
 
 </project>
