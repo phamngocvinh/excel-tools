@@ -16,7 +16,7 @@
   <h3 align="center">Excel Tools</h3>
 
   <p align="center">
-    Microsoft Office Excel Utilies
+    :bar_chart:Microsoft Office Excel Utilies
     <br />
     <a href="https://github.com/phamngocvinh/excel-tools"><strong>Explore the docs »</strong></a>
     <br />
@@ -62,7 +62,7 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## :question: About The Project
 
 Excel Tools contain multiple tool to work with Excel file.
 
@@ -71,7 +71,7 @@ Excel Tools contain multiple tool to work with Excel file.
 * [Ant](https://ant.apache.org/)
 
 <!-- GETTING STARTED -->
-## Getting Started
+## :beginner: Getting Started
 
 <!-- Installation -->
 ### Installation
@@ -94,7 +94,7 @@ To get a local copy up and running follow these simple steps.
 2. Run `ant build`
 
 <!-- Usage -->
-## Usage
+## :muscle: Usage
 
 <!-- Text Finder -->
 ### Text Finder
@@ -110,12 +110,12 @@ To get a local copy up and running follow these simple steps.
 > Coming Soon
 
 <!-- ROADMAP -->
-## Roadmap
+## :world_map: Roadmap
 
 See the [open issues](https://github.com/phamngocvinh/excel-tools/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
-## Contributing
+## :rocket: Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -126,12 +126,12 @@ Contributions are what make the open source community such an amazing place to l
 5. Open a Pull Request
 
 <!-- LICENSE -->
-## License
+## :closed_book: License
 
 Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
-## Contact
+## :mailbox: Contact
 
 [![Mail][mail-shield]][mail-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
@@ -139,7 +139,7 @@ Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 Project Link: [https://github.com/phamngocvinh/excel-tools](https://github.com/phamngocvinh/excel-tools)
 
 <!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
+## :books: Acknowledgements
 
 * [Apache Ant](https://ant.apache.org/)
 * [Apache POI](https://poi.apache.org/)
