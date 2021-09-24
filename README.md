@@ -94,7 +94,7 @@ To get a local copy up and running follow these simple steps.
 2. Run `ant build`
 
 <!-- Usage -->
-## :muscle: Usage
+## :man_teacher: Usage
 
 <!-- Text Finder -->
 ### Text Finder
