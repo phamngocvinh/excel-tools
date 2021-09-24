@@ -16,7 +16,7 @@
   <h3 align="center">Excel Tools</h3>
 
   <p align="center">
-    :bar_chart:Microsoft Office Excel Utilies
+    :bar_chart: Microsoft Office Excel Utilies
     <br />
     <a href="https://github.com/phamngocvinh/excel-tools"><strong>Explore the docs »</strong></a>
     <br />
