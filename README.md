@@ -62,7 +62,7 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## :question: About The Project
+## :stars: About The Project
 
 Excel Tools contain multiple tool to work with Excel file.
 
