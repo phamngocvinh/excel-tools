@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -20,9 +22,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -141,8 +145,10 @@ public class Main {
 			doSearch(new File(config_search_path));
 		}
 
+		// Write Search Result
 		writeResult();
 
+		// Push result to OutputStream
 		FileOutputStream outputStream;
 		try {
 			outputStream = new FileOutputStream("Result.xlsx");
@@ -161,12 +167,17 @@ public class Main {
 	 */
 	private static void writeResult() {
 
+		// Get Result Sheet
 		XSSFSheet sheet = wb_Result.getSheet("Result");
 
+		// Loop through all results to write
 		for (int idx = 0; idx < listResult.size(); idx++) {
 			String[] arr = listResult.get(idx).split(SEP);
 
+			// Create new row
 			sheet.createRow(idx);
+
+			// Write result to new row
 			for (int rIdx = 0; rIdx < arr.length; rIdx++) {
 				sheet.getRow(idx).createCell(rIdx).setCellValue(arr[rIdx]);
 			}
@@ -180,28 +191,46 @@ public class Main {
 	 */
 	private static void doSearch(File file) {
 		try {
-			String ext = FilenameUtils.getExtension(file.getName());
 			Workbook workbook;
+
+			// Get file extension
+			String ext = FilenameUtils.getExtension(file.getName());
+
+			// If Excel 2007 file format
 			if (ext.equals("xlsx")) {
 				workbook = new XSSFWorkbook(new FileInputStream(file));
-			} else if (ext.equals("xls")) {
+			}
+			// If Excel 97-2003 file format
+			else if (ext.equals("xls")) {
 				workbook = new HSSFWorkbook(new FileInputStream(file));
-			} else {
+			}
+			// If none above
+			else {
 				logger.error("File not Supported: " + file.getName());
 				return;
 			}
 
 			logger.info("Processing " + file.getName());
 
+			// Loop though all sheets in workbook
 			for (int idx = 0; idx < workbook.getNumberOfSheets(); idx++) {
+
+				// Get sheet by index
 				Sheet sheet = workbook.getSheetAt(idx);
+
+				// Loop though all rows
 				for (int rIdx = 0; rIdx < sheet.getLastRowNum(); rIdx++) {
 					if (sheet.getRow(rIdx + 1) != null) {
+						// Loop though all columns
 						for (int cIdx = 0; cIdx < sheet.getRow(rIdx + 1).getLastCellNum(); cIdx++) {
+							// Get cell value
 							String cellVal = formatter.formatCellValue(sheet.getRow(rIdx + 1).getCell(cIdx));
 							if (!StringUtils.isBlank(cellVal)) {
+								// Loop through search condition
 								for (String srchCond : config_SrchCond) {
+									// if cell value match search condition
 									if (srchCond.equals(cellVal)) {
+										// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
 										logger.info("Found " + srchCond + " at "
 												+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
 										String result = StringUtils.joinWith(SEP, srchCond,
