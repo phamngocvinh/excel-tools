@@ -7,12 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -22,11 +19,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -100,66 +95,74 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		// Get config file
-		try {
-			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
-			prop.load(fis);
-		} catch (FileNotFoundException e) {
-			logger.error("FileNotFoundException: config.properties");
-			return;
-		} catch (IOException e) {
-			logger.error("IOException: config.properties");
-			return;
-		}
+		logger.info("=== Text Finder ver." + appVersion + " ===");
+		logger.info("=== START ===");
 
-		// Check if config file valid
-		if (!isValidConfig()) {
-			return;
-		}
-
-		// Read config file
 		try {
-			if (!readConfig()) {
+			// Get config file
+			try {
+				FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
+				prop.load(fis);
+			} catch (FileNotFoundException e) {
+				logger.error("FileNotFoundException: config.properties");
+				return;
+			} catch (IOException e) {
+				logger.error("IOException: config.properties");
 				return;
 			}
-		} catch (InvalidFormatException e1) {
-			logger.error("InvalidFormatException: Config file");
-			return;
-		} catch (IOException e1) {
-			logger.error("IOException: Config file");
-			return;
-		}
 
-		// Initialize Result workbook
-		wb_Result = new XSSFWorkbook();
-		wb_Result.createSheet("Result");
-
-		// If search path is folder
-		if (config_IsFolder) {
-			Collection<File> fileList = FileUtils.listFiles(new File(config_search_path), null, false);
-			for (File file : fileList) {
-				doSearch(file);
+			// Check if config file valid
+			if (!isValidConfig()) {
+				return;
 			}
-		} else {
-			// If search path is file
-			doSearch(new File(config_search_path));
+
+			// Read config file
+			try {
+				if (!readConfig()) {
+					return;
+				}
+			} catch (InvalidFormatException e1) {
+				logger.error("InvalidFormatException: Config file");
+				return;
+			} catch (IOException e1) {
+				logger.error("IOException: Config file");
+				return;
+			}
+
+			// Initialize Result workbook
+			wb_Result = new XSSFWorkbook();
+			wb_Result.createSheet("Result");
+
+			// If search path is folder
+			if (config_IsFolder) {
+				Collection<File> fileList = FileUtils.listFiles(new File(config_search_path), null, false);
+				for (File file : fileList) {
+					doSearch(file);
+				}
+			} else {
+				// If search path is file
+				doSearch(new File(config_search_path));
+			}
+
+			// Write Search Result
+			writeResult();
+
+			// Push result to OutputStream
+			FileOutputStream outputStream;
+			try {
+				outputStream = new FileOutputStream("Result.xlsx");
+				wb_Result.write(outputStream);
+			} catch (FileNotFoundException e) {
+				logger.error("FileNotFoundException: Write Result");
+			} catch (IOException e) {
+				logger.error("IOException: Write Result");
+			}
+
+		} catch (Exception ex) {
+			logger.error("Internal Exception: " + ex.getLocalizedMessage());
+		} finally {
+			logger.info("=== END ===");
 		}
-
-		// Write Search Result
-		writeResult();
-
-		// Push result to OutputStream
-		FileOutputStream outputStream;
-		try {
-			outputStream = new FileOutputStream("Result.xlsx");
-			wb_Result.write(outputStream);
-		} catch (FileNotFoundException e) {
-			logger.error("FileNotFoundException: Write Result");
-		} catch (IOException e) {
-			logger.error("IOException: Write Result");
-		}
-
-		logger.info("Done");
 	}
 
 	/**
