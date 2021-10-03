@@ -34,7 +34,7 @@ public class Main {
 	/**
 	 * Application Version
 	 */
-	private static final String appVersion = "0.1";
+	private static final String appVersion = "0.1.2";
 
 	/**
 	 * Proerties
