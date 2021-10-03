@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -19,9 +20,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -178,11 +181,12 @@ public class Main {
 			String[] arr = listResult.get(idx).split(SEP);
 
 			// Create new row
-			sheet.createRow(idx);
+			int rIdx = idx + 1;
+			sheet.createRow(rIdx);
 
 			// Write result to new row
-			for (int rIdx = 0; rIdx < arr.length; rIdx++) {
-				sheet.getRow(idx).createCell(rIdx).setCellValue(arr[rIdx]);
+			for (int aIdx = 0; aIdx < arr.length; aIdx++) {
+				sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
 			}
 		}
 	}
@@ -209,11 +213,11 @@ public class Main {
 			}
 			// If none above
 			else {
-				logger.error("File not Supported: " + file.getName());
+				logger.warn("File not Supported: " + file.getName() + " -> Ignored");
 				return;
 			}
 
-			logger.info("Processing " + file.getName());
+			logger.info("Searching " + file.getName());
 
 			// Loop though all sheets in workbook
 			for (int idx = 0; idx < workbook.getNumberOfSheets(); idx++) {
@@ -246,6 +250,30 @@ public class Main {
 						}
 					}
 				}
+
+				// Loop through all comments
+				for (Entry<CellAddress, ? extends Comment> entry : sheet.getCellComments().entrySet()) {
+
+					// Cell location
+					String location = entry.getKey().toString();
+					// Comment string
+					String comment = entry.getValue().getString().toString();
+
+					// Loop through search condition
+					for (String srchCond : config_SrchCond) {
+						// if comment match search condition
+						if (srchCond.equals(comment)) {
+							logger.info("Found " + srchCond + " at "
+									+ location);
+							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
+							String result = StringUtils.joinWith(SEP, srchCond,
+									location,
+									sheet.getSheetName(), file.getName(), file.getAbsolutePath());
+							listResult.add(result);
+						}
+					}
+				}
+
 			}
 		} catch (IOException e) {
 			logger.error("IOException: " + file.getName());
