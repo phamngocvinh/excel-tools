@@ -42,7 +42,7 @@ public class Main {
 	/**
 	 * Application Version
 	 */
-	private static final String appVersion = "0.1.3";
+	private static final String appVersion = "1.0";
 
 	/**
 	 * Proerties
