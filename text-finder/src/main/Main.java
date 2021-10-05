@@ -22,11 +22,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.ShapeContainer;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFShape;
+import org.apache.poi.xssf.usermodel.XSSFShapeGroup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFSimpleShape;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Main {
@@ -34,7 +38,7 @@ public class Main {
 	/**
 	 * Application Version
 	 */
-	private static final String appVersion = "0.1.2";
+	private static final String appVersion = "0.1.3";
 
 	/**
 	 * Proerties
@@ -75,6 +79,11 @@ public class Main {
 	 * Config: Search Conditions
 	 */
 	private static List<String> config_SrchCond = new LinkedList<>();
+	
+	/**
+	 * List of Shapes
+	 */
+	private static List<XSSFSimpleShape> listShapes = new LinkedList<>();
 
 	/**
 	 * Result workbook
@@ -196,6 +205,7 @@ public class Main {
 	 * 
 	 * @param file File
 	 */
+	@SuppressWarnings("unchecked")
 	private static void doSearch(File file) {
 		try {
 			Workbook workbook;
@@ -224,6 +234,9 @@ public class Main {
 
 				// Get sheet by index
 				Sheet sheet = workbook.getSheetAt(idx);
+				
+				// Get all shapes
+				getAllShapes((ShapeContainer<XSSFShape>) sheet.getDrawingPatriarch());
 
 				// Loop though all rows
 				for (int rIdx = 0; rIdx < sheet.getLastRowNum(); rIdx++) {
@@ -263,12 +276,25 @@ public class Main {
 					for (String srchCond : config_SrchCond) {
 						// if comment match search condition
 						if (srchCond.equals(comment)) {
-							logger.info("Found " + srchCond + " at "
-									+ location);
+							logger.info("Found " + srchCond + " at " + location);
 							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
-							String result = StringUtils.joinWith(SEP, srchCond,
-									location,
-									sheet.getSheetName(), file.getName(), file.getAbsolutePath());
+							String result = StringUtils.joinWith(SEP, srchCond, location, sheet.getSheetName(),
+									file.getName(), file.getAbsolutePath());
+							listResult.add(result);
+						}
+					}
+				}
+				
+				// Loop through all shapes
+				for (XSSFSimpleShape shape : listShapes) {
+					// Loop through search condition
+					for (String srchCond : config_SrchCond) {
+						// if shape text match search condition
+						if (srchCond.equals(shape.getText())) {
+							logger.info("Found " + srchCond + " in shape ");
+							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
+							String result = StringUtils.joinWith(SEP, srchCond, null, sheet.getSheetName(),
+									file.getName(), file.getAbsolutePath());
 							listResult.add(result);
 						}
 					}
@@ -276,7 +302,7 @@ public class Main {
 
 			}
 		} catch (IOException e) {
-			logger.error("IOException: " + file.getName());
+			logger.warn("Cannot read " + file.getName() + " -> Ignored");
 		}
 	}
 
@@ -392,5 +418,24 @@ public class Main {
 	 */
 	private static String getProp(String key) {
 		return prop.getProperty(key);
+	}
+
+	/**
+	 * SetAllShapes
+	 * 
+	 * @param container
+	 */
+	private static void getAllShapes(ShapeContainer<XSSFShape> container) {
+		
+		for (XSSFShape shape : container) {
+			if (shape instanceof XSSFShapeGroup) {
+				XSSFShapeGroup shapeGroup = (XSSFShapeGroup) shape;
+				getAllShapes(shapeGroup);
+				
+			} else if (shape instanceof XSSFSimpleShape) {
+				XSSFSimpleShape simpleShape = (XSSFSimpleShape) shape;
+				listShapes.add(simpleShape);
+			}
+		}
 	}
 }
