@@ -86,7 +86,7 @@
 	</target>
 	
 	<target name="zip">
-		<zip destfile="${dist.dir}/text-finder-v0.1.zip"
+		<zip destfile="${dist.dir}/text-finder-v1.0.zip"
 		     basedir="${dist.dir}"/>
 	</target>
 
