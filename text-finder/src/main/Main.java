@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -24,11 +23,14 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.ShapeContainer;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFShapeGroup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -65,7 +67,8 @@ public class Main {
 	/**
 	 * List Header
 	 */
-	private static final List<String> listHeader = Arrays.asList("Text", "Location", "Sheet", "Filename", "Path");
+	private static final List<String> listHeader = Arrays.asList("Text    ", "Location    ", "Sheet    ",
+			"Filename    ", "Path    ");
 
 	/**
 	 * Name: Config file name
@@ -86,7 +89,7 @@ public class Main {
 	 * Config: Search Conditions
 	 */
 	private static List<String> config_SrchCond = new LinkedList<>();
-	
+
 	/**
 	 * List of Shapes
 	 */
@@ -191,11 +194,17 @@ public class Main {
 
 		// Get Result Sheet
 		XSSFSheet sheet = wb_Result.getSheet("Result");
-		
+
 		// Write Headers
+		XSSFCellStyle cellStyle = wb_Result.createCellStyle();
+		Font headerFont = wb_Result.createFont();
+		headerFont.setBold(true);
+		cellStyle.setFont(headerFont);
+
 		sheet.createRow(0);
 		for (int idx = 0; idx < listHeader.size(); idx++) {
 			sheet.getRow(0).createCell(idx).setCellValue(listHeader.get(idx));
+			sheet.getRow(0).getCell(idx).setCellStyle(cellStyle);
 		}
 
 		// Loop through all results to write
@@ -210,6 +219,14 @@ public class Main {
 			for (int aIdx = 0; aIdx < arr.length; aIdx++) {
 				sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
 			}
+		}
+
+		// Set filter
+		sheet.setAutoFilter(new CellRangeAddress(0, sheet.getLastRowNum(), 0, listHeader.size() - 1));
+
+		// Set Column fit contents
+		for (int idx = 0; idx < listHeader.size(); idx++) {
+			sheet.autoSizeColumn(idx);
 		}
 	}
 
@@ -247,7 +264,7 @@ public class Main {
 
 				// Get sheet by index
 				Sheet sheet = workbook.getSheetAt(idx);
-				
+
 				// Get all shapes
 				getAllShapes((ShapeContainer<XSSFShape>) sheet.getDrawingPatriarch());
 
@@ -297,7 +314,7 @@ public class Main {
 						}
 					}
 				}
-				
+
 				// Loop through all shapes
 				for (XSSFSimpleShape shape : listShapes) {
 					// Loop through search condition
@@ -312,7 +329,6 @@ public class Main {
 						}
 					}
 				}
-
 			}
 		} catch (IOException e) {
 			logger.warn("Cannot read " + file.getName() + " -> Ignored");
@@ -439,12 +455,12 @@ public class Main {
 	 * @param container
 	 */
 	private static void getAllShapes(ShapeContainer<XSSFShape> container) {
-		
+
 		for (XSSFShape shape : container) {
 			if (shape instanceof XSSFShapeGroup) {
 				XSSFShapeGroup shapeGroup = (XSSFShapeGroup) shape;
 				getAllShapes(shapeGroup);
-				
+
 			} else if (shape instanceof XSSFSimpleShape) {
 				XSSFSimpleShape simpleShape = (XSSFSimpleShape) shape;
 				listShapes.add(simpleShape);
