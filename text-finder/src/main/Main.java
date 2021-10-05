@@ -262,7 +262,7 @@ public class Main {
 								// Loop through search condition
 								for (String srchCond : config_SrchCond) {
 									// if cell value match search condition
-									if (srchCond.equals(cellVal)) {
+									if (cellVal.contains(srchCond)) {
 										// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
 										logger.info("Found " + srchCond + " at "
 												+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
@@ -288,7 +288,7 @@ public class Main {
 					// Loop through search condition
 					for (String srchCond : config_SrchCond) {
 						// if comment match search condition
-						if (srchCond.equals(comment)) {
+						if (comment.contains(srchCond)) {
 							logger.info("Found " + srchCond + " at " + location);
 							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
 							String result = StringUtils.joinWith(SEP, srchCond, location, sheet.getSheetName(),
@@ -303,7 +303,7 @@ public class Main {
 					// Loop through search condition
 					for (String srchCond : config_SrchCond) {
 						// if shape text match search condition
-						if (srchCond.equals(shape.getText())) {
+						if (shape.getText().contains(srchCond)) {
 							logger.info("Found " + srchCond + " in shape ");
 							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
 							String result = StringUtils.joinWith(SEP, srchCond, null, sheet.getSheetName(),
