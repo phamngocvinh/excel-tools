@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,6 +61,11 @@ public class Main {
 	 * Seperator
 	 */
 	private static final String SEP = "&%&";
+
+	/**
+	 * List Header
+	 */
+	private static final List<String> listHeader = Arrays.asList("Text", "Location", "Sheet", "Filename", "Path");
 
 	/**
 	 * Name: Config file name
@@ -184,6 +191,12 @@ public class Main {
 
 		// Get Result Sheet
 		XSSFSheet sheet = wb_Result.getSheet("Result");
+		
+		// Write Headers
+		sheet.createRow(0);
+		for (int idx = 0; idx < listHeader.size(); idx++) {
+			sheet.getRow(0).createCell(idx).setCellValue(listHeader.get(idx));
+		}
 
 		// Loop through all results to write
 		for (int idx = 0; idx < listResult.size(); idx++) {
