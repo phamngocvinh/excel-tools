@@ -201,7 +201,7 @@ public class Main {
 
 	// Check for newer version
 	private static void checkVersion() {
-
+		
 		HttpURLConnection connection = null;
 		try {
 			// Get latest version
@@ -218,13 +218,12 @@ public class Main {
 			boolean isMatch = m.matches();
 
 			if (isMatch) {
-				double netVersion = Double.parseDouble(m.group(1).substring(0, m.group(1).indexOf("\"")));
-				double localVersion = Double.parseDouble(appVersion);
+				String netVersion = m.group(1).substring(0, m.group(1).indexOf("\""));
 
 				// If local version is older than newest version
-				if (netVersion > localVersion) {
+				if (netVersion.compareTo(appVersion) > 0) {
 					logger.warn("You're using older version. Please update to the latest version in the link below");
-					logger.info("Current: v" + localVersion);
+					logger.info("Current: v" + appVersion);
 					logger.info("Latest: v" + netVersion);
 					logger.info(
 							"Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v" + netVersion);
