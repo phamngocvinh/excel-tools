@@ -2,6 +2,8 @@
 	<description>
 		Create a Java Project (JAR) with Ant build script
 	</description>
+	
+    <property file="config.properties"/>    
 
 	<property name="projectName" value="text-finder" />
 	<property name="src.dir" location="src" />
@@ -86,7 +88,7 @@
 	</target>
 	
 	<target name="zip">
-		<zip destfile="${dist.dir}/text-finder-v1.0.zip"
+		<zip destfile="${dist.dir}/text-finder-v${app.version}.zip"
 		     basedir="${dist.dir}"/>
 	</target>
 
