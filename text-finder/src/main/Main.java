@@ -1,10 +1,14 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -13,6 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -42,10 +48,10 @@ public class Main {
 	/**
 	 * Application Version
 	 */
-	private static final String appVersion = "1.0";
+	private static String appVersion = "";
 
 	/**
-	 * Proerties
+	 * Properties
 	 */
 	private static Properties prop = new Properties();
 
@@ -117,21 +123,21 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		logger.info("=== Text Finder ver." + appVersion + " ===");
-		logger.info("=== START ===");
-
 		try {
+			logger.info("====================================================================================");
+
 			// Get config file
-			try {
-				FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
-				prop.load(fis);
-			} catch (FileNotFoundException e) {
-				logger.error("FileNotFoundException: config.properties");
-				return;
-			} catch (IOException e) {
-				logger.error("IOException: config.properties");
-				return;
-			}
+			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
+			prop.load(fis);
+
+			// Get app version from properties
+			appVersion = getProp("app.version");
+
+			// Check for new version
+			checkVersion();
+
+			logger.info("=== Text Finder ver." + appVersion + " ===");
+			logger.info("========= START =========");
 
 			// Check if config file valid
 			if (!isValidConfig()) {
@@ -180,10 +186,56 @@ public class Main {
 				logger.error("IOException: Write Result");
 			}
 
+		} catch (FileNotFoundException e) {
+			logger.error("FileNotFoundException: config.properties");
+			return;
+		} catch (IOException e) {
+			logger.error("IOException: config.properties");
+			return;
 		} catch (Exception ex) {
 			logger.error("Internal Exception: " + ex.getLocalizedMessage());
 		} finally {
-			logger.info("=== END ===");
+			logger.info("========= END =========");
+		}
+	}
+
+	// Check for newer version
+	private static void checkVersion() {
+
+		HttpURLConnection connection = null;
+		try {
+			// Get latest version
+			URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases/latest");
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+			String line = in.readLine();
+			in.close();
+
+			// Get release version
+			Pattern p = Pattern.compile(".+releases/tag/v(.+)\",\".+");
+			Matcher m = p.matcher(line);
+			boolean isMatch = m.matches();
+
+			if (isMatch) {
+				double netVersion = Double.parseDouble(m.group(1).substring(0, m.group(1).indexOf("\"")));
+				double localVersion = Double.parseDouble(appVersion);
+
+				// If local version is older than newest version
+				if (netVersion > localVersion) {
+					logger.warn("You're using older version. Please update to the latest version in the link below");
+					logger.info("Current: v" + localVersion);
+					logger.info("Latest: v" + netVersion);
+					logger.info(
+							"Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v" + netVersion);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Internal Exception: " + e.getLocalizedMessage());
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
 		}
 	}
 
@@ -237,6 +289,7 @@ public class Main {
 	 */
 	@SuppressWarnings("unchecked")
 	private static void doSearch(File file) {
+
 		try {
 			Workbook workbook;
 
