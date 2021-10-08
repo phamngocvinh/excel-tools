@@ -66,7 +66,7 @@ public class Main {
 	private static final String dir = System.getProperty("user.dir");
 
 	/**
-	 * Seperator
+	 * Separator
 	 */
 	private static final String SEP = "&%&";
 
