@@ -61,6 +61,11 @@ public class Main {
 	private static final Logger logger = LogManager.getLogger(Main.class);
 
 	/**
+	 * Logger
+	 */
+	private static final int LOG_NUM = 50;
+
+	/**
 	 * Current path
 	 */
 	private static final String dir = System.getProperty("user.dir");
@@ -136,8 +141,8 @@ public class Main {
 			// Check for new version
 			checkVersion();
 
-			logger.info("=== Text Finder ver." + appVersion + " ===");
-			logger.info("========= START =========");
+			logger.info(StringUtils.rightPad("=== Text Finder v" + appVersion + " ", LOG_NUM, "="));
+			logger.info(StringUtils.rightPad("=== START =========", LOG_NUM, "="));
 
 			// Check if config file valid
 			if (!isValidConfig()) {
@@ -195,7 +200,7 @@ public class Main {
 		} catch (Exception ex) {
 			logger.error("Internal Exception: " + ex.getLocalizedMessage());
 		} finally {
-			logger.info("========= END =========");
+			logger.info(StringUtils.rightPad("=== END =========", LOG_NUM, "="));
 		}
 	}
 
@@ -213,12 +218,12 @@ public class Main {
 			in.close();
 
 			// Get release version
-			Pattern p = Pattern.compile(".+releases/tag/v(.+)\",\".+");
+			Pattern p = Pattern.compile(".+name.+text-finder-v(.+).zip.+");
 			Matcher m = p.matcher(line);
 			boolean isMatch = m.matches();
 
 			if (isMatch) {
-				String netVersion = m.group(1).substring(0, m.group(1).indexOf("\""));
+				String netVersion = m.group(1).substring(0, m.group(1).indexOf(".zip"));
 
 				// If local version is older than newest version
 				if (netVersion.compareTo(appVersion) > 0) {
