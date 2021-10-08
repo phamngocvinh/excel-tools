@@ -207,7 +207,6 @@ public class Main {
 	// Check for newer version
 	private static void checkVersion() {
 		
-		HttpURLConnection connection = null;
 		try {
 			// Get latest version
 			URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases/latest");
@@ -236,10 +235,6 @@ public class Main {
 			}
 		} catch (Exception e) {
 			logger.error("Internal Exception: " + e.getLocalizedMessage());
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
 		}
 	}
 
