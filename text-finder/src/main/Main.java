@@ -209,7 +209,7 @@ public class Main {
 		
 		try {
 			// Get latest version
-			URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases/latest");
+			URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases");
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -217,7 +217,7 @@ public class Main {
 			in.close();
 
 			// Get release version
-			Pattern p = Pattern.compile(".+name.+text-finder-v(.+).zip.+");
+			Pattern p = Pattern.compile(".+?name.+?text-finder-v(.+).zip.+");
 			Matcher m = p.matcher(line);
 			boolean isMatch = m.matches();
 
