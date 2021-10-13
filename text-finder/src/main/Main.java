@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,6 +48,11 @@ public class Main {
 	 * Application Version
 	 */
 	private static String appVersion = "";
+
+	/**
+	 * Latest Application Version
+	 */
+	private static String netVersion = "";
 
 	/**
 	 * Properties
@@ -122,6 +126,11 @@ public class Main {
 	private static List<String> listResult = new LinkedList<>();
 
 	/**
+	 * Result workbook
+	 */
+	private static boolean isNewVersionExists = false;
+
+	/**
 	 * Main class
 	 * 
 	 * @param args
@@ -129,7 +138,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		try {
-			logger.info("====================================================================================");
+			logger.info(StringUtils.rightPad("", LOG_NUM, "="));
 
 			// Get config file
 			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
@@ -142,7 +151,7 @@ public class Main {
 			checkVersion();
 
 			logger.info(StringUtils.rightPad("=== Text Finder v" + appVersion + " ", LOG_NUM, "="));
-			logger.info(StringUtils.rightPad("=== START =========", LOG_NUM, "="));
+			logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
 
 			// Check if config file valid
 			if (!isValidConfig()) {
@@ -200,42 +209,52 @@ public class Main {
 		} catch (Exception ex) {
 			logger.error("Internal Exception: " + ex.getLocalizedMessage());
 		} finally {
-			logger.info(StringUtils.rightPad("=== END =========", LOG_NUM, "="));
+			if (isNewVersionExists) {
+				logger.info(StringUtils.rightPad("=== New Version Availiable ", LOG_NUM, "="));
+				logger.warn(
+						"You're using older version. Please update to the latest version in the link below");
+				logger.info("Current: v" + appVersion);
+				logger.info("Latest: v" + netVersion);
+				logger.info("Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v"
+						+ netVersion);
+			}
+			logger.info(StringUtils.rightPad("=== END ", LOG_NUM, "="));
 		}
 	}
 
 	// Check for newer version
 	private static void checkVersion() {
-		
-		try {
-			// Get latest version
-			URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases");
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					// Get latest version
+					URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases");
 
-			String line = in.readLine();
-			in.close();
+					BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
-			// Get release version
-			Pattern p = Pattern.compile(".+?name.+?text-finder-v(.+).zip.+");
-			Matcher m = p.matcher(line);
-			boolean isMatch = m.matches();
+					String line = in.readLine();
+					in.close();
 
-			if (isMatch) {
-				String netVersion = m.group(1).substring(0, m.group(1).indexOf(".zip"));
+					// Get release version
+					Pattern p = Pattern.compile(".+?name.+?text-finder-v(.+).zip.+");
+					Matcher m = p.matcher(line);
+					boolean isMatch = m.matches();
 
-				// If local version is older than newest version
-				if (netVersion.compareTo(appVersion) > 0) {
-					logger.warn("You're using older version. Please update to the latest version in the link below");
-					logger.info("Current: v" + appVersion);
-					logger.info("Latest: v" + netVersion);
-					logger.info(
-							"Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v" + netVersion);
+					if (isMatch) {
+						netVersion = m.group(1).substring(0, m.group(1).indexOf(".zip"));
+
+						// If local version is older than newest version
+						if (netVersion.compareTo(appVersion) > 0) {
+							isNewVersionExists = true;
+						}
+					}
+				} catch (Exception e) {
+					logger.error("Internal Exception: " + e.getLocalizedMessage());
 				}
 			}
-		} catch (Exception e) {
-			logger.error("Internal Exception: " + e.getLocalizedMessage());
-		}
+		};
+		thread.start();
 	}
 
 	/**
@@ -294,6 +313,11 @@ public class Main {
 
 			// Get file extension
 			String ext = FilenameUtils.getExtension(file.getName());
+
+			if (file.getName().startsWith("~")) {
+				logger.info("Ignored: " + file.getName());
+				return;
+			}
 
 			// If Excel 2007 file format
 			if (ext.equals("xlsx")) {
