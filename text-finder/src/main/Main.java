@@ -209,6 +209,7 @@ public class Main {
 		} catch (Exception ex) {
 			logger.error("Internal Exception: " + ex.getLocalizedMessage());
 		} finally {
+			logger.info(StringUtils.rightPad("=== END ", LOG_NUM, "="));
 			if (isNewVersionExists) {
 				logger.info(StringUtils.rightPad("=== New Version Availiable ", LOG_NUM, "="));
 				logger.warn(
@@ -218,7 +219,6 @@ public class Main {
 				logger.info("Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v"
 						+ netVersion);
 			}
-			logger.info(StringUtils.rightPad("=== END ", LOG_NUM, "="));
 		}
 	}
 
