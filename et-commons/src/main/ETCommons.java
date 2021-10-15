@@ -8,6 +8,10 @@ import java.util.regex.Pattern;
 
 public class ETCommons {
 
+	/**
+	 * Project Enums
+	 *
+	 */
 	public static enum Project {
 		TEXT_FINDER("text-finder"), DIFF_FINDER("diff-finder");
 
