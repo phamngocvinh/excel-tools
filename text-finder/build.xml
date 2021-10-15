@@ -1,4 +1,4 @@
-<project name="Distribution" default="distribute" basedir=".">
+<project name="Text-Finder Dist" default="distribute" basedir=".">
 	<description>
 		Create a Java Project (JAR) with Ant build script
 	</description>
