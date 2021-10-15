@@ -211,6 +211,7 @@ public class Main {
 				logger.info("Current: v" + appVersion);
 				logger.info("Latest: v" + netVersion);
 				logger.info("Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v" + netVersion);
+				logger.info(StringUtils.rightPad("", LOG_NUM, "="));
 			}
 		}
 	}

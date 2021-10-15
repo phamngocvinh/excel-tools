@@ -16,7 +16,7 @@
 
 	<target name="compile" depends="init" description="compile the source">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" includeantruntime="false" destdir="${build}" />
+		<javac target="1.8" source="1.8" srcdir="${src}" includeantruntime="false" destdir="${build}" />
 	</target>
 
 	<target name="dist" depends="compile" description="generate the distribution">

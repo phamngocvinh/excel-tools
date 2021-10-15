@@ -2,8 +2,8 @@
 	<description>
 		Create a Java Project (JAR) with Ant build script
 	</description>
-	
-    <property file="config.properties"/>    
+
+	<property file="config.properties" />
 
 	<property name="projectName" value="text-finder" />
 	<property name="src.dir" location="src" />
@@ -22,6 +22,7 @@
 	<!-- Get libraries -->
 	<target name="env">
 		<mkdir dir="${user.dir}/lib" />
+		<copy file="../et-commons/dist/commons-et-1.0.jar" todir="${user.dir}/lib/" />
 		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar" dest="${user.dir}/lib" />
 		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar" dest="${user.dir}/lib/" />
 		<get skipexisting="true" src="https://repo1.maven.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar" dest="${user.dir}/lib/" />
@@ -36,7 +37,7 @@
 
 	<target name="init" depends="env">
 		<mkdir dir="${build.dir}" />
-		<copy file="resources/log4j2.xml" todir="${build.dir}"/>
+		<copy file="resources/log4j2.xml" todir="${build.dir}" />
 	</target>
 
 	<!-- Need classpath to run this -->
@@ -72,24 +73,23 @@
 	<!-- Copy lib to dist/lib -->
 	<target name="lib" description="Copy lib to dist/lib">
 		<copy todir="${dist.lib.dir}">
-		  <fileset dir="${user.dir}/lib"/>
+			<fileset dir="${user.dir}/lib" />
 		</copy>
 	</target>
-	
+
 	<target name="pack" description="Copy config files">
-		<copy file="run.bat" todir="${dist.dir}"/>
-		<copy file="config.properties" todir="${dist.dir}"/>
-		<copy file="config.xlsx" todir="${dist.dir}"/>
+		<copy file="run.bat" todir="${dist.dir}" />
+		<copy file="config.properties" todir="${dist.dir}" />
+		<copy file="config.xlsx" todir="${dist.dir}" />
 	</target>
-	
+
 	<target name="clean" description="clean up">
 		<delete dir="${build.dir}" />
 		<delete dir="${dist.dir}" />
 	</target>
-	
+
 	<target name="zip">
-		<zip destfile="${dist.dir}/text-finder-v${app.version}.zip"
-		     basedir="${dist.dir}"/>
+		<zip destfile="${dist.dir}/text-finder-v${app.version}.zip" basedir="${dist.dir}" />
 	</target>
 
 	<!-- Default, Run to build App -->
