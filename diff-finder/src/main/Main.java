@@ -7,11 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +22,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -308,29 +311,53 @@ public class Main {
 				logger.warn("File not Supported: " + file_2.getName());
 				return;
 			}
-			
-			// Check match number of sheets
-			if (workbook_1.getNumberOfSheets() != workbook_2.getNumberOfSheets()) {
-				logger.warn("Number of sheets between two file is not same");
-				logger.warn(String.format("File 1: %d sheets", workbook_1.getNumberOfSheets()));
-				logger.warn(String.format("File 2: %d sheets", workbook_2.getNumberOfSheets()));
-				return;
+
+			// Get difference sheets
+			List<String> listSheet1 = new ArrayList<String>();
+			List<String> listSheet2 = new ArrayList<String>();
+
+			for (int idx = 0; idx < workbook_1.getNumberOfSheets(); idx++) {
+				listSheet1.add(workbook_1.getSheetName(idx));
+			}
+			for (int idx = 0; idx < workbook_2.getNumberOfSheets(); idx++) {
+				listSheet2.add(workbook_2.getSheetName(idx));
+			}
+
+			List<String> diffList = new ArrayList<>(CollectionUtils.removeAll(listSheet1, listSheet2));
+			for (int idx = 0; idx < diffList.size(); idx++) {
+				// TODO add result
+				listResult.add("New sheet: " + diffList.get(idx));
 			}
 
 			// Loop though all sheets in workbook
 			for (int idx = 0; idx < workbook_1.getNumberOfSheets(); idx++) {
-
-				// Get sheet by index
+				
 				Sheet sheet_1 = workbook_1.getSheetAt(idx);
-
-				// Loop though all rows
-				for (int rIdx = 0; rIdx < sheet_1.getLastRowNum(); rIdx++) {
-					if (sheet_1.getRow(rIdx + 1) != null) {
-						// Loop though all columns
-						for (int cIdx = 0; cIdx < sheet_1.getRow(rIdx + 1).getLastCellNum(); cIdx++) {
-							// Get cell value
-							String cellVal = formatter.formatCellValue(sheet_1.getRow(rIdx + 1).getCell(cIdx));
-							if (!StringUtils.isBlank(cellVal)) {
+				
+				for (int idxY = 0; idxY < workbook_2.getNumberOfSheets(); idxY++) {
+					
+					Sheet sheet_2 = workbook_2.getSheetAt(idxY);
+					
+					if (sheet_1.getSheetName().equals(sheet_2.getSheetName())) {
+						
+						// Loop though all rows
+						for (int rIdx = 0; rIdx < sheet_1.getLastRowNum(); rIdx++) {
+							
+							Row row_1 = sheet_1.getRow(rIdx + 1);
+							Row row_2 = sheet_2.getRow(rIdx + 1);
+							
+							if (row_1 != null && row_2 != null) {
+								// Loop though all columns
+								for (int cIdx = 0; cIdx < row_1.getLastCellNum(); cIdx++) {
+									// Get cell value
+									String cellVal_1 = formatter.formatCellValue(sheet_1.getRow(rIdx + 1).getCell(cIdx));
+									String cellVal_2 = formatter.formatCellValue(sheet_2.getRow(rIdx + 1).getCell(cIdx));
+									
+									if (!cellVal_1.equals(cellVal_2)) {
+										// TODO add result
+										listResult.add(cellVal_1 + " / " + cellVal_2);
+									}
+								}
 							}
 						}
 					}
