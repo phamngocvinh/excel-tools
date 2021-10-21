@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -70,8 +71,8 @@ public class Main {
 	/**
 	 * List Header
 	 */
-	private static final List<String> listHeader = Arrays.asList("Text    ", "Location    ", "Sheet    ",
-			"Filename    ", "Path    ");
+	private static final List<String> listHeader = Arrays.asList("From      ", "To        ", "Location     ",
+			"Sheet      ");
 
 	/**
 	 * Name: Config file name
@@ -325,37 +326,39 @@ public class Main {
 
 			List<String> diffList = new ArrayList<>(CollectionUtils.removeAll(listSheet1, listSheet2));
 			for (int idx = 0; idx < diffList.size(); idx++) {
-				// TODO add result
-				listResult.add("New sheet: " + diffList.get(idx));
+				listResult.add(StringUtils.joinWith(SEP, "New sheet: " + diffList.get(idx), "", "", ""));
 			}
 
 			// Loop though all sheets in workbook
 			for (int idx = 0; idx < workbook_1.getNumberOfSheets(); idx++) {
-				
+
 				Sheet sheet_1 = workbook_1.getSheetAt(idx);
-				
+
 				for (int idxY = 0; idxY < workbook_2.getNumberOfSheets(); idxY++) {
-					
+
 					Sheet sheet_2 = workbook_2.getSheetAt(idxY);
-					
+
 					if (sheet_1.getSheetName().equals(sheet_2.getSheetName())) {
-						
+
 						// Loop though all rows
 						for (int rIdx = 0; rIdx < sheet_1.getLastRowNum(); rIdx++) {
-							
+
 							Row row_1 = sheet_1.getRow(rIdx + 1);
 							Row row_2 = sheet_2.getRow(rIdx + 1);
-							
+
 							if (row_1 != null && row_2 != null) {
 								// Loop though all columns
 								for (int cIdx = 0; cIdx < row_1.getLastCellNum(); cIdx++) {
 									// Get cell value
-									String cellVal_1 = formatter.formatCellValue(sheet_1.getRow(rIdx + 1).getCell(cIdx));
-									String cellVal_2 = formatter.formatCellValue(sheet_2.getRow(rIdx + 1).getCell(cIdx));
-									
+									String cellVal_1 = formatter
+											.formatCellValue(sheet_1.getRow(rIdx + 1).getCell(cIdx));
+									String cellVal_2 = formatter
+											.formatCellValue(sheet_2.getRow(rIdx + 1).getCell(cIdx));
+
 									if (!cellVal_1.equals(cellVal_2)) {
-										// TODO add result
-										listResult.add(cellVal_1 + " / " + cellVal_2);
+										listResult.add(StringUtils.joinWith(SEP, cellVal_1, cellVal_2,
+												CellReference.convertNumToColString(cIdx) + (rIdx + 2),
+												sheet_1.getSheetName()));
 									}
 								}
 							}
