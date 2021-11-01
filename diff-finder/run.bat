@@ -1,2 +1,2 @@
-java -jar text-finder.jar
-pause 
+@java -jar text-finder.jar
+@pause 
