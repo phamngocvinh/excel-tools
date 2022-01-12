@@ -337,7 +337,7 @@ public class Main {
 										logger.info("Found " + srchCond + " at "
 												+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
 										String result = StringUtils.joinWith(SEP, srchCond,
-												CellReference.convertNumToColString(cIdx), (rIdx + 2),
+												CellReference.convertNumToColString(cIdx) + (rIdx + 2),
 												sheet.getSheetName(), file.getName(), file.getAbsolutePath());
 										listResult.add(result);
 									}
