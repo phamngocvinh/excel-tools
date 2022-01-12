@@ -409,7 +409,8 @@ public class Main {
 		config_path_1 = formatter.formatCellValue(sheet.getRow(row_Path_1).getCell(col_Path_1));
 
 		// Check if search path is file
-		if (!Files.isRegularFile(Path.of(config_path_1))) {
+		Path path1 = new File(config_path_1).toPath();
+		if (!Files.isRegularFile(path1)) {
 			logger.error("File 1 is not exist");
 			workbook.close();
 			return false;
@@ -421,7 +422,8 @@ public class Main {
 		config_path_2 = formatter.formatCellValue(sheet.getRow(row_Path_2).getCell(col_Path_2));
 
 		// Check if search path is file
-		if (!Files.isRegularFile(Path.of(config_path_2))) {
+		Path path2 = new File(config_path_2).toPath();
+		if (!Files.isRegularFile(path2)) {
 			logger.error("File 2 is not exist");
 			workbook.close();
 			return false;

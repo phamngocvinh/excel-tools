@@ -426,15 +426,16 @@ public class Main {
 		config_search_path = formatter.formatCellValue(sheet.getRow(row_Path).getCell(col_Path));
 
 		// Check if search path is file or folder
-		if (Files.isDirectory(Path.of(config_search_path))) {
+		Path path = new File(config_search_path).toPath();
+		if (Files.isDirectory(path)) {
 			config_IsFolder = true;
-			if (Path.of(config_search_path).toFile().listFiles().length == 0) {
+			if (path.toFile().listFiles().length == 0) {
 				logger.info("Search path is empty");
 				workbook.close();
 				return false;
 			}
 			logger.info("Search in " + config_search_path);
-		} else if (Files.isRegularFile(Path.of(config_search_path))) {
+		} else if (Files.isRegularFile(path)) {
 			config_IsFolder = false;
 			logger.info("Search in " + config_search_path);
 		} else {
@@ -509,14 +510,16 @@ public class Main {
 	 */
 	private static void getAllShapes(ShapeContainer<XSSFShape> container) {
 
-		for (XSSFShape shape : container) {
-			if (shape instanceof XSSFShapeGroup) {
-				XSSFShapeGroup shapeGroup = (XSSFShapeGroup) shape;
-				getAllShapes(shapeGroup);
-
-			} else if (shape instanceof XSSFSimpleShape) {
-				XSSFSimpleShape simpleShape = (XSSFSimpleShape) shape;
-				listShapes.add(simpleShape);
+		if (container != null) {
+			for (XSSFShape shape : container) {
+				if (shape instanceof XSSFShapeGroup) {
+					XSSFShapeGroup shapeGroup = (XSSFShapeGroup) shape;
+					getAllShapes(shapeGroup);
+					
+				} else if (shape instanceof XSSFSimpleShape) {
+					XSSFSimpleShape simpleShape = (XSSFSimpleShape) shape;
+					listShapes.add(simpleShape);
+				}
 			}
 		}
 	}
