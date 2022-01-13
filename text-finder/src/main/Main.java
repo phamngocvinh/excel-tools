@@ -19,18 +19,23 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.ShapeContainer;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFHyperlink;
 import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFShapeGroup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -248,6 +253,8 @@ public class Main {
 		headerFont.setBold(true);
 		cellStyle.setFont(headerFont);
 
+		CreationHelper createHelper = wb_Result.getCreationHelper();
+
 		sheet.createRow(0);
 		for (int idx = 0; idx < listHeader.size(); idx++) {
 			sheet.getRow(0).createCell(idx).setCellValue(listHeader.get(idx));
@@ -264,7 +271,23 @@ public class Main {
 
 			// Write result to new row
 			for (int aIdx = 0; aIdx < arr.length; aIdx++) {
-				sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
+				// Filename hyperlink
+				if (aIdx == 4) {
+					sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
+
+					// Change path string format
+					XSSFHyperlink link = (XSSFHyperlink) createHelper.createHyperlink(HyperlinkType.FILE);
+					link.setAddress(arr[4].replace("\\", "/"));
+					sheet.getRow(rIdx).getCell(aIdx).setHyperlink((XSSFHyperlink) link);
+
+					// Set link font
+					Font blueFont = wb_Result.createFont();
+					blueFont.setColor(IndexedColors.BLUE.getIndex());
+					blueFont.setUnderline(Font.U_SINGLE);
+					CellUtil.setFont(sheet.getRow(rIdx).getCell(aIdx), blueFont);
+				} else {
+					sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
+				}
 			}
 		}
 
@@ -515,7 +538,7 @@ public class Main {
 				if (shape instanceof XSSFShapeGroup) {
 					XSSFShapeGroup shapeGroup = (XSSFShapeGroup) shape;
 					getAllShapes(shapeGroup);
-					
+
 				} else if (shape instanceof XSSFSimpleShape) {
 					XSSFSimpleShape simpleShape = (XSSFSimpleShape) shape;
 					listShapes.add(simpleShape);
