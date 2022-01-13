@@ -135,11 +135,11 @@ public class Main {
 		try {
 			logger.info(StringUtils.rightPad("", LOG_NUM, "="));
 
-			// Get config file
+			// Get configuration file
 			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
 			prop.load(fis);
 
-			// Get app version from properties
+			// Get application version from properties
 			appVersion = getProp("app.version");
 
 			// Check for new version
@@ -148,12 +148,12 @@ public class Main {
 			logger.info(StringUtils.rightPad("=== Text Finder v" + appVersion + " ", LOG_NUM, "="));
 			logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
 
-			// Check if config file valid
+			// Check if configuration file valid
 			if (!isValidConfig()) {
 				return;
 			}
 
-			// Read config file
+			// Read configuration file
 			try {
 				if (!readConfig()) {
 					return;
@@ -389,7 +389,7 @@ public class Main {
 	}
 
 	/**
-	 * Read Config File to get settings
+	 * Read Configuration File to get settings
 	 * 
 	 * @throws IOException
 	 * @throws InvalidFormatException
@@ -398,7 +398,7 @@ public class Main {
 	 */
 	private static boolean readConfig() throws InvalidFormatException, IOException {
 
-		// Check if config excel exists
+		// Check if configuration excel exists
 		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
 		if (fileWorkBook.exists()) {
 			logger.info("Read config.xlsx");
@@ -407,13 +407,13 @@ public class Main {
 			return false;
 		}
 
-		// Open config file
+		// Open configuration file
 		XSSFWorkbook workbook = new XSSFWorkbook(fileWorkBook);
 
-		// Open config sheet
+		// Open configuration sheet
 		XSSFSheet sheet = workbook.getSheet(prop.getProperty("config.sheet"));
 
-		// Check if config sheet exists
+		// Check if configuration sheet exists
 		if (sheet == null) {
 			logger.error("Config sheet not found");
 			workbook.close();
@@ -460,13 +460,13 @@ public class Main {
 	}
 
 	/**
-	 * Check if Config file is valid
+	 * Check if Configuration file is valid
 	 * 
 	 * @return
 	 */
 	private static boolean isValidConfig() {
 
-		// Check if correctly config
+		// Check if correctly configuration
 		if (StringUtils.isBlank(getProp("app.version"))) {
 			logger.error("Config: Missing app.version property");
 			return false;
@@ -484,7 +484,7 @@ public class Main {
 			return false;
 		}
 
-		// If config version different from app version, throw error
+		// If configuration version different from application version, throw error
 		if (!appVersion.equals(getProp("app.version"))) {
 			logger.error("App Version do not match Config Version");
 			return false;
