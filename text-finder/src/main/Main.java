@@ -249,7 +249,7 @@ public class Main {
 				netVersion = getLatestVersion();
 
 				// If local version is older than newest version
-				if (appVersion.compareTo(netVersion) < 0) {
+				if (netVersion != null && netVersion.compareTo(appVersion) > 0) {
 					isNewVersionExists = true;
 				}
 			}

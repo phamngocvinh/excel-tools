@@ -1,11 +1,11 @@
-<project name="Text-Finder Dist" default="distribute" basedir=".">
+<project name="Excel-Tools Dist" default="distribute" basedir=".">
 	<description>
 		Create a Java Project (JAR) with Ant build script
 	</description>
 
 	<property file="config.properties" />
 
-	<property name="projectName" value="text-finder" />
+	<property name="projectName" value="excel-tools" />
 	<property name="src.dir" location="src" />
 	<property name="build.dir" location="bin" />
 	<property name="dist.dir" location="dist" />
@@ -78,7 +78,7 @@
 	</target>
 
 	<target name="pack" description="Copy config files">
-		<copy file="run.bat" todir="${dist.dir}" />
+		<copy file="run-text-finder.bat" todir="${dist.dir}" />
 		<copy file="config.properties" todir="${dist.dir}" />
 		<copy file="config.xlsx" todir="${dist.dir}" />
 	</target>
@@ -89,7 +89,7 @@
 	</target>
 
 	<target name="zip">
-		<zip destfile="${dist.dir}/text-finder-v${app.version}.zip" basedir="${dist.dir}" />
+		<zip destfile="${dist.dir}/excel-tools-v${app.version}.zip" basedir="${dist.dir}" />
 	</target>
 
 	<!-- Default, Run to build App -->
