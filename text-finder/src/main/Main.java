@@ -1,10 +1,13 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -13,9 +16,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -177,7 +183,9 @@ public class Main {
 
 			// If search path is folder
 			if (config_IsFolder) {
-				Collection<File> fileList = FileUtils.listFiles(new File(config_search_path), null, false);
+				Collection<File> fileList = FileUtils.listFiles(new File(config_search_path), TrueFileFilter.INSTANCE,
+						TrueFileFilter.INSTANCE);
+
 				for (File file : fileList) {
 					doSearch(file);
 				}
@@ -228,10 +236,10 @@ public class Main {
 			public void run() {
 
 				// Get latest version
-				netVersion = ETCommons.getLatestVersion(ETCommons.Project.TEXT_FINDER);
+				netVersion = getLatestVersion();
 
 				// If local version is older than newest version
-				if (netVersion.compareTo(appVersion) > 0) {
+				if (appVersion.compareTo(netVersion) < 0) {
 					isNewVersionExists = true;
 				}
 			}
@@ -275,16 +283,20 @@ public class Main {
 				if (aIdx == 4) {
 					sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
 
-					// Change path string format
-					XSSFHyperlink link = (XSSFHyperlink) createHelper.createHyperlink(HyperlinkType.FILE);
-					link.setAddress(arr[4].replace("\\", "/"));
-					sheet.getRow(rIdx).getCell(aIdx).setHyperlink((XSSFHyperlink) link);
+					try {
+						// Change path string format
+						XSSFHyperlink link = (XSSFHyperlink) createHelper.createHyperlink(HyperlinkType.FILE);
+						link.setAddress(arr[4].replace("\\", "/"));
+						sheet.getRow(rIdx).getCell(aIdx).setHyperlink((XSSFHyperlink) link);
 
-					// Set link font
-					Font blueFont = wb_Result.createFont();
-					blueFont.setColor(IndexedColors.BLUE.getIndex());
-					blueFont.setUnderline(Font.U_SINGLE);
-					CellUtil.setFont(sheet.getRow(rIdx).getCell(aIdx), blueFont);
+						// Set link font
+						Font blueFont = wb_Result.createFont();
+						blueFont.setColor(IndexedColors.BLUE.getIndex());
+						blueFont.setUnderline(Font.U_SINGLE);
+						CellUtil.setFont(sheet.getRow(rIdx).getCell(aIdx), blueFont);
+					} catch (Exception ex) {
+
+					}
 				} else {
 					sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
 				}
@@ -477,7 +489,11 @@ public class Main {
 		}
 		logger.info("Search condition: " + config_SrchCond);
 
-		workbook.close();
+		try {
+			workbook.close();
+		} catch (IOException ex) {
+			return true;
+		}
 
 		return true;
 	}
@@ -544,6 +560,37 @@ public class Main {
 					listShapes.add(simpleShape);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Get latest version
+	 * 
+	 * @param projectName
+	 * @return
+	 */
+	private static String getLatestVersion() {
+		try {
+			// Get latest version
+			URL url = new URL("https://api.github.com/repos/phamngocvinh/excel-tools/releases");
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+			String line = in.readLine();
+			in.close();
+
+			// Get release version
+			Pattern p = Pattern.compile(".+?name.+?text-finder-v(.+).zip.+");
+			Matcher m = p.matcher(line);
+			boolean isMatch = m.matches();
+
+			if (isMatch) {
+				return m.group(1).substring(0, m.group(1).indexOf(".zip"));
+			}
+
+			return null;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }
