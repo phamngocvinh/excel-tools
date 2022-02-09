@@ -1,2 +1,2 @@
-@java -jar text-finder.jar
+@java -Xmx1024m -jar text-finder.jar
 @pause 
