@@ -79,6 +79,7 @@
 
 	<target name="pack" description="Copy config files">
 		<copy file="run-text-finder.bat" todir="${dist.dir}" />
+		<copy file="run-diff-finder.bat" todir="${dist.dir}" />
 		<copy file="config.properties" todir="${dist.dir}" />
 		<copy file="config.xlsx" todir="${dist.dir}" />
 	</target>

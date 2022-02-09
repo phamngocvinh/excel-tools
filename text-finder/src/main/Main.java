@@ -161,61 +161,10 @@ public class Main {
 			// Check for new version
 			checkVersion();
 
-			logger.info(StringUtils.rightPad("=== Text Finder v" + appVersion + " ", LOG_NUM, "="));
-			logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
-
-			// Check if configuration file valid
-			if (!isValidConfig()) {
-				return;
-			}
-
-			// Read configuration file
-			try {
-				if (!readConfig()) {
-					return;
-				}
-			} catch (InvalidFormatException e1) {
-				logger.error("InvalidFormatException: Config file");
-				return;
-			} catch (IOException e1) {
-				logger.error("IOException: Config file");
-				return;
-			}
-
-			// Initialize Result workbook
-			wb_Result = new XSSFWorkbook();
-			wb_Result.createSheet("Result");
-
-			// If search path is folder
-			if (config_IsFolder) {
-				Collection<File> fileList;
-				if (config_IsSearchRecursively) {
-					fileList = FileUtils.listFiles(new File(config_search_path), TrueFileFilter.INSTANCE,
-							TrueFileFilter.INSTANCE);
-				} else {
-					fileList = FileUtils.listFiles(new File(config_search_path), null, false);
-				}
-
-				for (File file : fileList) {
-					doSearch(file);
-				}
-			} else {
-				// If search path is file
-				doSearch(new File(config_search_path));
-			}
-
-			// Write Search Result
-			writeResult();
-
-			// Push result to OutputStream
-			FileOutputStream outputStream;
-			try {
-				outputStream = new FileOutputStream("Result.xlsx");
-				wb_Result.write(outputStream);
-			} catch (FileNotFoundException e) {
-				logger.error("FileNotFoundException: Write Result");
-			} catch (IOException e) {
-				logger.error("IOException: Write Result");
+			if ("1".equals(args[0])) {
+				RunTextFinder();
+			} else if ("2".equals(args[0])) {
+				RunDiffFinder();
 			}
 
 		} catch (FileNotFoundException e) {
@@ -236,6 +185,77 @@ public class Main {
 				logger.info("Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v" + netVersion);
 				logger.info(StringUtils.rightPad("", LOG_NUM, "="));
 			}
+		}
+	}
+	
+	/**
+	 * Execute Different Finder Function
+	 */
+	private static void RunDiffFinder() {
+		logger.info(StringUtils.rightPad("=== Diff Finder ", LOG_NUM, "="));
+		logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
+		logger.info("Coming soon... ");
+	}
+	
+	/**
+	 * Execute Text Finder Function
+	 */
+	private static void RunTextFinder() {
+		logger.info(StringUtils.rightPad("=== Text Finder ", LOG_NUM, "="));
+		logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
+
+		// Check if configuration file valid
+		if (!isValidConfig()) {
+			return;
+		}
+
+		// Read configuration file
+		try {
+			if (!readConfig()) {
+				return;
+			}
+		} catch (InvalidFormatException e1) {
+			logger.error("InvalidFormatException: Config file");
+			return;
+		} catch (IOException e1) {
+			logger.error("IOException: Config file");
+			return;
+		}
+
+		// Initialize Result workbook
+		wb_Result = new XSSFWorkbook();
+		wb_Result.createSheet("Result");
+
+		// If search path is folder
+		if (config_IsFolder) {
+			Collection<File> fileList;
+			if (config_IsSearchRecursively) {
+				fileList = FileUtils.listFiles(new File(config_search_path), TrueFileFilter.INSTANCE,
+						TrueFileFilter.INSTANCE);
+			} else {
+				fileList = FileUtils.listFiles(new File(config_search_path), null, false);
+			}
+
+			for (File file : fileList) {
+				doSearch(file);
+			}
+		} else {
+			// If search path is file
+			doSearch(new File(config_search_path));
+		}
+
+		// Write Search Result
+		writeResult();
+
+		// Push result to OutputStream
+		FileOutputStream outputStream;
+		try {
+			outputStream = new FileOutputStream("Result.xlsx");
+			wb_Result.write(outputStream);
+		} catch (FileNotFoundException e) {
+			logger.error("FileNotFoundException: Write Result");
+		} catch (IOException e) {
+			logger.error("IOException: Write Result");
 		}
 	}
 
