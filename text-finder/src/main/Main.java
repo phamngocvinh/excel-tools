@@ -493,7 +493,7 @@ public class Main {
 			config_IsFolder = false;
 			logger.info("Search in " + config_search_path);
 		} else {
-			logger.error("Search path not exist. Check config.xlsx");
+			logger.error("Search path not exist. Please check config.xlsx");
 			workbook.close();
 			return false;
 		}
@@ -599,7 +599,7 @@ public class Main {
 			in.close();
 
 			// Get release version
-			Pattern p = Pattern.compile(".+?name.+?text-finder-v(.+).zip.+");
+			Pattern p = Pattern.compile(".+?name.+?excel-tools-v(.+).zip.+");
 			Matcher m = p.matcher(line);
 			boolean isMatch = m.matches();
 
