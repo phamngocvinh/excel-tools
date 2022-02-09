@@ -107,6 +107,11 @@ public class Main {
 	private static boolean config_IsFolder = false;
 
 	/**
+	 * Config: Is Search Recursively
+	 */
+	private static boolean config_IsSearchRecursively = false;
+
+	/**
 	 * Config: Search Conditions
 	 */
 	private static List<String> config_SrchCond = new LinkedList<>();
@@ -183,8 +188,13 @@ public class Main {
 
 			// If search path is folder
 			if (config_IsFolder) {
-				Collection<File> fileList = FileUtils.listFiles(new File(config_search_path), TrueFileFilter.INSTANCE,
-						TrueFileFilter.INSTANCE);
+				Collection<File> fileList;
+				if (config_IsSearchRecursively) {
+					fileList = FileUtils.listFiles(new File(config_search_path), TrueFileFilter.INSTANCE,
+							TrueFileFilter.INSTANCE);
+				} else {
+					fileList = FileUtils.listFiles(new File(config_search_path), null, false);
+				}
 
 				for (File file : fileList) {
 					doSearch(file);
@@ -446,7 +456,7 @@ public class Main {
 		XSSFWorkbook workbook = new XSSFWorkbook(fileWorkBook);
 
 		// Open configuration sheet
-		XSSFSheet sheet = workbook.getSheet(prop.getProperty("config.sheet"));
+		XSSFSheet sheet = workbook.getSheet(prop.getProperty("textfinder.config.sheet"));
 
 		// Check if configuration sheet exists
 		if (sheet == null) {
@@ -455,9 +465,18 @@ public class Main {
 			return false;
 		}
 
+		// Get recursively option
+		int col_Recursive = Integer.parseInt(getProp("textfinder.config.recursive.col")) - 1;
+		int row_Recursive = Integer.parseInt(getProp("textfinder.config.recursive.row")) - 1;
+		String recursiveOption = formatter.formatCellValue(sheet.getRow(row_Recursive).getCell(col_Recursive))
+				.toLowerCase();
+		if ("y".equals(recursiveOption) || "yes".equals(recursiveOption)) {
+			config_IsSearchRecursively = true;
+		}
+
 		// Get search path
-		int col_Path = Integer.parseInt(getProp("config.search.path.col")) - 1;
-		int row_Path = Integer.parseInt(getProp("config.search.path.row")) - 1;
+		int col_Path = Integer.parseInt(getProp("textfinder.config.path.col")) - 1;
+		int row_Path = Integer.parseInt(getProp("textfinder.config.path.row")) - 1;
 		config_search_path = formatter.formatCellValue(sheet.getRow(row_Path).getCell(col_Path));
 
 		// Check if search path is file or folder
@@ -480,8 +499,8 @@ public class Main {
 		}
 
 		// Get Search Condition
-		int col_Cond = Integer.parseInt(getProp("config.search.cond.col")) - 1;
-		int row_Cond = Integer.parseInt(getProp("config.search.cond.row")) - 1;
+		int col_Cond = Integer.parseInt(getProp("textfinder.config.cond.col")) - 1;
+		int row_Cond = Integer.parseInt(getProp("textfinder.config.cond.row")) - 1;
 		int row_Last = sheet.getLastRowNum();
 
 		for (int idx = row_Cond; idx <= row_Last; idx++) {
@@ -510,16 +529,16 @@ public class Main {
 			logger.error("Config: Missing app.version property");
 			return false;
 		} else if (StringUtils.isBlank(getProp("config.file"))) {
-			logger.error("Config: Missing app.version property");
+			logger.error("Config: Missing config.file property");
 			return false;
-		} else if (StringUtils.isBlank(getProp("config.sheet"))) {
-			logger.error("Config: Missing app.version property");
+		} else if (StringUtils.isBlank(getProp("textfinder.config.sheet"))) {
+			logger.error("Config: Missing textfinder.config.sheet property");
 			return false;
-		} else if (StringUtils.isBlank(getProp("config.search.path.col"))) {
-			logger.error("Config: Missing config.search.path.col property");
+		} else if (StringUtils.isBlank(getProp("textfinder.config.path.col"))) {
+			logger.error("Config: Missing textfinder.config.path.col property");
 			return false;
-		} else if (StringUtils.isBlank(getProp("config.search.path.row"))) {
-			logger.error("Config: Missing config.search.path.row property");
+		} else if (StringUtils.isBlank(getProp("textfinder.config.path.row"))) {
+			logger.error("Config: Missing textfinder.config.path.row property");
 			return false;
 		}
 
