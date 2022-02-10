@@ -1,8 +1,0 @@
-/bin/
-/dist/
-/.settings/
-/.idea/
-Result.xlsx
-*.iml
-/target/
-.project

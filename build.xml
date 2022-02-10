@@ -22,7 +22,6 @@
 	<!-- Get libraries -->
 	<target name="env">
 		<mkdir dir="${user.dir}/lib" />
-		<copy file="../et-commons/dist/commons-et-1.0.jar" todir="${user.dir}/lib/" />
 		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar" dest="${user.dir}/lib" />
 		<get skipexisting="true" src="https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar" dest="${user.dir}/lib/" />
 		<get skipexisting="true" src="https://repo1.maven.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar" dest="${user.dir}/lib/" />
