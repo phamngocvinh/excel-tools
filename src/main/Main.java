@@ -363,7 +363,7 @@ public class Main {
 
 			// If Excel 2007 file format
 			if (ext.equals("xlsx")) {
-				workbook = new XSSFWorkbook(new FileInputStream(file));
+				workbook = new XSSFWorkbook(file);
 			}
 			// If Excel 97-2003 file format
 			else if (ext.equals("xls")) {
@@ -448,8 +448,11 @@ public class Main {
 					}
 				}
 			}
+			workbook.close();
 		} catch (IOException e) {
 			logger.warn("Cannot read " + file.getName() + " -> Ignored");
+		} catch (InvalidFormatException e) {
+			logger.error("Invalid Format: " + file.getName() + " -> Skipped");
 		}
 	}
 
@@ -524,7 +527,10 @@ public class Main {
 		int row_Last = sheet.getLastRowNum();
 
 		for (int idx = row_Cond; idx <= row_Last; idx++) {
-			config_SrchCond.add(formatter.formatCellValue(sheet.getRow(idx).getCell(col_Cond)));
+			String srchCond = formatter.formatCellValue(sheet.getRow(idx).getCell(col_Cond));
+			if (!StringUtils.isEmpty(srchCond)) {
+				config_SrchCond.add(srchCond);
+			}
 		}
 		logger.info("Search condition: " + config_SrchCond);
 
