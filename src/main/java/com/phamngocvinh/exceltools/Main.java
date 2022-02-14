@@ -1,4 +1,4 @@
-package com.phamngocvinh;
+package com.phamngocvinh.exceltools;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,7 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Excel-Tools
  *
  */
-public class App {
+public class Main {
 
 	/**
 	 * Application Version
@@ -72,7 +72,7 @@ public class App {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = LogManager.getLogger(App.class);
+	private static final Logger logger = LogManager.getLogger(Main.class);
 
 	/**
 	 * Logger

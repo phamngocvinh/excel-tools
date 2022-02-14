@@ -11,7 +11,7 @@
 	<property name="dist.dir" location="dist" />
 	<property name="dist.lib.dir" location="dist/lib" />
 	<property name="lib.dir" value="lib" />
-	<property name="main-class" value="com.phamngocvinh.App" />
+	<property name="main-class" value="com.phamngocvinh.exceltools.Main" />
 
 	<path id="classpath">
 		<fileset dir="${basedir}/">
