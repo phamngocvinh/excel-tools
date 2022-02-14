@@ -49,7 +49,7 @@ import org.apache.poi.xssf.usermodel.XSSFSimpleShape;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * Hello world!
+ * Excel-Tools
  *
  */
 public class App {
