@@ -52,8 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Hello world!
  *
  */
-public class App 
-{
+public class App {
 
 	/**
 	 * Application Version
@@ -97,27 +96,27 @@ public class App
 			"Filename    ", "Path    ");
 
 	/**
-	 * Name: Config file name
+	 * Name: Configuration file name
 	 */
 	private static String name_config = "config.properties";
 
 	/**
-	 * Config: Search path
+	 * Configuration: Search path
 	 */
 	private static String config_search_path = "";
 
 	/**
-	 * Config: Is Search in Folder
+	 * Configuration: Is Search in Folder
 	 */
 	private static boolean config_IsFolder = false;
 
 	/**
-	 * Config: Is Search Recursively
+	 * Configuration: Is Search Recursively
 	 */
 	private static boolean config_IsSearchRecursively = false;
 
 	/**
-	 * Config: Search Conditions
+	 * Configuration: Search Conditions
 	 */
 	private static List<String> config_SrchCond = new LinkedList<>();
 
@@ -192,7 +191,7 @@ public class App
 			}
 		}
 	}
-	
+
 	/**
 	 * Execute Different Finder Function
 	 */
@@ -201,7 +200,7 @@ public class App
 		logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
 		logger.info("Coming soon... ");
 	}
-	
+
 	/**
 	 * Execute Text Finder Function
 	 */
