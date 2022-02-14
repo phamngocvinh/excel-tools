@@ -1,4 +1,4 @@
-package main;
+package com.phamngocvinh;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,7 +48,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFSimpleShape;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class Main {
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
 
 	/**
 	 * Application Version
@@ -68,7 +73,7 @@ public class Main {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = LogManager.getLogger(Main.class);
+	private static final Logger logger = LogManager.getLogger(App.class);
 
 	/**
 	 * Logger
