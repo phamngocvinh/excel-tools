@@ -149,13 +149,13 @@ Project Link: [https://github.com/phamngocvinh/excel-tools](https://github.com/p
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[download-shield]: https://img.shields.io/github/downloads/phamngocvinh/excel-tools/total?color=Green&style=for-the-badge
+[download-shield]: https://img.shields.io/github/downloads/phamngocvinh/excel-tools/total?style=for-the-badge&labelColor=4c566a&color=5e81ac&logo=github&logoColor=white
 [download-url]: https://github.com/phamngocvinh/excel-tools/releases/latest
-[release-shield]: https://img.shields.io/github/v/release/phamngocvinh/excel-tools?style=for-the-badge
+[release-shield]: https://img.shields.io/github/v/release/phamngocvinh/excel-tools?style=for-the-badge&labelColor=4c566a&color=5e81ac&logo=Battle.net&logoColor=white
 [release-url]: https://github.com/phamngocvinh/excel-tools/releases/latest
-[issues-shield]: https://img.shields.io/github/issues/phamngocvinh/excel-tools?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/phamngocvinh/excel-tools?style=for-the-badge&labelColor=4c566a&color=5e81ac&logo=Todoist&logoColor=white
 [issues-url]: https://github.com/phamngocvinh/excel-tools/issues
-[license-shield]: https://img.shields.io/github/license/phamngocvinh/excel-tools?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/phamngocvinh/excel-tools?style=for-the-badge&labelColor=4c566a&color=5e81ac&logo=AdGuard&logoColor=white
 [license-url]: https://github.com/phamngocvinh/excel-tools/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/linkedin-blue?style=for-the-badge&logo=linkedin
 [linkedin-url]: https://www.linkedin.com/in/phamngocvinh932
