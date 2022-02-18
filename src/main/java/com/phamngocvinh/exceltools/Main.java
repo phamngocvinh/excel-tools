@@ -328,7 +328,7 @@ public class Main {
 						blueFont.setUnderline(Font.U_SINGLE);
 						CellUtil.setFont(sheet.getRow(rIdx).getCell(aIdx), blueFont);
 					} catch (Exception ex) {
-
+						logger.debug("Invalid file path");
 					}
 				} else {
 					sheet.getRow(rIdx).createCell(aIdx).setCellValue(arr[aIdx]);
@@ -390,72 +390,102 @@ public class Main {
 				getAllShapes((ShapeContainer<XSSFShape>) sheet.getDrawingPatriarch());
 
 				// Loop though all rows
-				for (int rIdx = 0; rIdx < sheet.getLastRowNum(); rIdx++) {
-					if (sheet.getRow(rIdx + 1) != null) {
-						// Loop though all columns
-						for (int cIdx = 0; cIdx < sheet.getRow(rIdx + 1).getLastCellNum(); cIdx++) {
-							// Get cell value
-							String cellVal = formatter.formatCellValue(sheet.getRow(rIdx + 1).getCell(cIdx));
-							if (!StringUtils.isBlank(cellVal)) {
-								// Loop through search condition
-								for (String srchCond : config_SrchCond) {
-									// if cell value match search condition
-									if (cellVal.contains(srchCond)) {
-										// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
-										logger.info("Found " + srchCond + " at "
-												+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
-										String result = StringUtils.joinWith(SEP, srchCond,
-												CellReference.convertNumToColString(cIdx) + (rIdx + 2),
-												sheet.getSheetName(), file.getName(), file.getAbsolutePath());
-										listResult.add(result);
-									}
-								}
-							}
-						}
-					}
-				}
+				searchAllRow(file, sheet);
 
 				// Loop through all comments
-				for (Entry<CellAddress, ? extends Comment> entry : sheet.getCellComments().entrySet()) {
-
-					// Cell location
-					String location = entry.getKey().toString();
-					// Comment string
-					String comment = entry.getValue().getString().toString();
-
-					// Loop through search condition
-					for (String srchCond : config_SrchCond) {
-						// if comment match search condition
-						if (comment.contains(srchCond)) {
-							logger.info("Found " + srchCond + " at " + location);
-							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
-							String result = StringUtils.joinWith(SEP, srchCond, location, sheet.getSheetName(),
-									file.getName(), file.getAbsolutePath());
-							listResult.add(result);
-						}
-					}
-				}
+				searchComment(file, sheet);
 
 				// Loop through all shapes
-				for (XSSFSimpleShape shape : listShapes) {
-					// Loop through search condition
-					for (String srchCond : config_SrchCond) {
-						// if shape text match search condition
-						if (shape.getText().contains(srchCond)) {
-							logger.info("Found " + srchCond + " in shape ");
-							// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
-							String result = StringUtils.joinWith(SEP, srchCond, null, sheet.getSheetName(),
-									file.getName(), file.getAbsolutePath());
-							listResult.add(result);
-						}
-					}
-				}
+				searchAllShapes(file, sheet);
 			}
 			workbook.close();
 		} catch (IOException e) {
 			logger.warn("Cannot read " + file.getName() + " -> Ignored");
 		} catch (InvalidFormatException e) {
 			logger.error("Invalid Format: " + file.getName() + " -> Skipped");
+		}
+	}
+
+	/**
+	 * Search all shapes in sheet
+	 * 
+	 * @param file  search file
+	 * @param sheet search sheet
+	 */
+	private static void searchAllShapes(File file, Sheet sheet) {
+		for (XSSFSimpleShape shape : listShapes) {
+			// Loop through search condition
+			for (String srchCond : config_SrchCond) {
+				// if shape text match search condition
+				if (shape.getText().contains(srchCond)) {
+					logger.info("Found " + srchCond + " in shape ");
+					// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
+					String result = StringUtils.joinWith(SEP, srchCond, null, sheet.getSheetName(), file.getName(),
+							file.getAbsolutePath());
+					listResult.add(result);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Search all comments in sheet
+	 * 
+	 * @param file  search file
+	 * @param sheet search sheet
+	 */
+	private static void searchComment(File file, Sheet sheet) {
+		for (Entry<CellAddress, ? extends Comment> entry : sheet.getCellComments().entrySet()) {
+
+			// Cell location
+			String location = entry.getKey().toString();
+			// Comment string
+			String comment = entry.getValue().getString().toString();
+
+			// Loop through search condition
+			for (String srchCond : config_SrchCond) {
+				// if comment match search condition
+				if (comment.contains(srchCond)) {
+					logger.info("Found " + srchCond + " at " + location);
+					// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
+					String result = StringUtils.joinWith(SEP, srchCond, location, sheet.getSheetName(), file.getName(),
+							file.getAbsolutePath());
+					listResult.add(result);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Search all rows in sheet
+	 * 
+	 * @param file  search file
+	 * @param sheet search sheet
+	 */
+	private static void searchAllRow(File file, Sheet sheet) {
+		for (int rIdx = 0; rIdx < sheet.getLastRowNum(); rIdx++) {
+			if (sheet.getRow(rIdx + 1) != null) {
+				// Loop though all columns
+				for (int cIdx = 0; cIdx < sheet.getRow(rIdx + 1).getLastCellNum(); cIdx++) {
+					// Get cell value
+					String cellVal = formatter.formatCellValue(sheet.getRow(rIdx + 1).getCell(cIdx));
+					if (!StringUtils.isBlank(cellVal)) {
+						// Loop through search condition
+						for (String srchCond : config_SrchCond) {
+							// if cell value match search condition
+							if (cellVal.contains(srchCond)) {
+								// Result = Search Condition + Column + Row + Sheet Name + File Name + File Path
+								logger.info("Found " + srchCond + " in " + cellVal + " at "
+										+ CellReference.convertNumToColString(cIdx) + (rIdx + 2));
+								String result = StringUtils.joinWith(SEP, cellVal,
+										CellReference.convertNumToColString(cIdx) + (rIdx + 2), sheet.getSheetName(),
+										file.getName(), file.getAbsolutePath());
+								listResult.add(result);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
