@@ -5,15 +5,6 @@
 
 	<property file="config.properties" />
 
-	<property name="projectName" value="excel-tools" />
-	<property name="src.dir" location="src" />
-	<property name="build.dir" location="bin" />
-	<property name="dist.dir" location="dist" />
-	<property name="zip.dir" value="excel-tools-v${app.version}" />
-	<property name="dist.lib.dir" location="dist/${zip.dir}/lib" />
-	<property name="lib.dir" value="lib" />
-	<property name="main-class" value="com.phamngocvinh.exceltools.Main" />
-
 	<path id="classpath">
 		<fileset dir="${basedir}/">
 			<include name="${lib.dir}/*.jar" />
@@ -46,7 +37,7 @@
 
 		<mkdir dir="${dist.dir}/${zip.dir}" />
 
-		<jar jarfile="${dist.dir}/${zip.dir}/${projectName}.jar" basedir="${build.dir}">
+		<jar jarfile="${dist.dir}/${zip.dir}/${project.name}.jar" basedir="${build.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="${main-class}" />
 				<attribute name="Class-Path" value="${classpath.name}" />
