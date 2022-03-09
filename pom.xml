@@ -78,7 +78,7 @@
             <phase>install</phase>
             <configuration>
               <tasks>
-                <ant antfile="build.xml" target="distribute"/>
+                <ant antfile="build.xml" target="distribute" />
               </tasks>
             </configuration>
             <goals>
