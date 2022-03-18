@@ -270,13 +270,65 @@ public class Main {
 			return;
 		}
 
+		try{
+			// Compare sheet counts
+			File baseFile = new File(config_diff_path_1);
+			File compareFile = new File(config_diff_path_2);
+	
+			Workbook baseWorkbook;
+			Workbook compareWorkbook;
+	
+			String ext = FilenameUtils.getExtension(baseFile.getName());
+			// If Excel 2007 file format
+			if (ext.equals("xlsx")) {
+				baseWorkbook = new XSSFWorkbook(baseFile);
+			}
+			// If Excel 97-2003 file format
+			else if (ext.equals("xls")) {
+				baseWorkbook = new HSSFWorkbook(new FileInputStream(baseFile));
+			}
+			// If none above
+			else {
+				logger.error("File not Supported: " + baseFile.getName() + " -> Ignored");
+				return;
+			}
+	
+			ext = FilenameUtils.getExtension(compareFile.getName());
+			// If Excel 2007 file format
+			if (ext.equals("xlsx")) {
+				compareWorkbook = new XSSFWorkbook(compareFile);
+			}
+			// If Excel 97-2003 file format
+			else if (ext.equals("xls")) {
+				compareWorkbook = new HSSFWorkbook(new FileInputStream(compareFile));
+			}
+			// If none above
+			else {
+				logger.error("File not Supported: " + compareFile.getName() + " -> Ignored");
+				baseWorkbook.close();
+				return;
+			}
+	
+			// Loop base sheets
+			// Loop base row
+			// Loop base col
+			// Close workbook
+			baseWorkbook.close();
+			compareWorkbook.close();
+			// Write result
+			
+		} catch (IOException ex){
+			logger.error("Cannot read file");
+			return;
+		} catch (InvalidFormatException ex){
+			logger.error("Invalid Format");
+			return;
+		}
+
+
 		// Initialize Result workbook
 		wb_Result = new XSSFWorkbook();
 		wb_Result.createSheet("Result");
-
-
-		// Do something here......
-
 
 		// Push result to OutputStream
 		FileOutputStream outputStream;
@@ -705,7 +757,8 @@ public class Main {
 		config_diff_path_1 = formatter.formatCellValue(sheet.getRow(row_Path_1).getCell(col_Path_1));
 
 		// Check if search path is file or folder
-		Path path = new File(config_diff_path_1).toPath();
+		File baseFile = new File(config_diff_path_1);
+		Path path = baseFile.toPath();
 		if (Files.isDirectory(path)) {
 			logger.error("Path 1 is directory");
 			workbook.close();
@@ -717,6 +770,11 @@ public class Main {
 			workbook.close();
 			return false;
 		}
+		if (baseFile.getName().startsWith("~")) {
+			logger.error("Path 1 is temporary file");
+			workbook.close();
+			return false;
+		}
 
 		// Get file 2 path
 		int col_Path_2 = Integer.parseInt(getProp("difffinder.config.path2.col")) - 1;
@@ -724,7 +782,8 @@ public class Main {
 		config_diff_path_2 = formatter.formatCellValue(sheet.getRow(row_Path_2).getCell(col_Path_2));
 
 		// Check if search path is file or folder
-		path = new File(config_diff_path_2).toPath();
+		File compareFile = new File(config_diff_path_2);
+		path = compareFile.toPath();
 		if (Files.isDirectory(path)) {
 			logger.error("Path 2 is directory");
 			workbook.close();
@@ -733,6 +792,11 @@ public class Main {
 			logger.info("Path 2 " + config_diff_path_2);
 		} else {
 			logger.error("Path 2 not exist. Please check config.xlsx");
+			workbook.close();
+			return false;
+		}
+		if (compareFile.getName().startsWith("~")) {
+			logger.error("Path 2 is temporary file");
 			workbook.close();
 			return false;
 		}
