@@ -213,7 +213,7 @@ public class Main {
 			} else if (processType == 2) {
 				RunDiffFinder();
 			} else {
-				logger.error("Command not found. Please try again.");	
+				logger.error("Command not found. Please try again.");
 			}
 
 		} catch (NumberFormatException e) {
@@ -246,7 +246,44 @@ public class Main {
 	private static void RunDiffFinder() {
 		logger.info(StringUtils.rightPad("=== Diff Finder ", LOG_PAD, "="));
 		logger.info(StringUtils.rightPad("=== START ", LOG_PAD, "="));
-		logger.info("Coming soon... ");
+
+		// Check if configuration file valid
+		if (!isValidConfigDiffFinder()) {
+			return;
+		}
+
+		// Read configuration file
+		try {
+			if (!readConfigDiffFinder()) {
+				return;
+			}
+		} catch (InvalidFormatException e1) {
+			logger.error("InvalidFormatException: Config file");
+			return;
+		} catch (IOException e1) {
+			logger.error("IOException: Config file");
+			return;
+		}
+
+		// Initialize Result workbook
+		wb_Result = new XSSFWorkbook();
+		wb_Result.createSheet("Result");
+
+
+		// Do something here......
+
+
+		// Push result to OutputStream
+		FileOutputStream outputStream;
+		try {
+			outputStream = new FileOutputStream("Result.xlsx");
+			wb_Result.write(outputStream);
+		} catch (FileNotFoundException e) {
+			logger.error("FileNotFoundException: Write Result");
+		} catch (IOException e) {
+			logger.error("IOException: Write Result");
+		}
+
 	}
 
 	/**
@@ -297,7 +334,7 @@ public class Main {
 		}
 
 		// Write Search Result
-		writeResult();
+		writeTextFinderResult();
 
 		// Push result to OutputStream
 		FileOutputStream outputStream;
@@ -330,9 +367,9 @@ public class Main {
 	}
 
 	/**
-	 * Write Result to Workbook
+	 * Write Text Finder Result
 	 */
-	private static void writeResult() {
+	private static void writeTextFinderResult() {
 
 		// Get Result Sheet
 		XSSFSheet sheet = wb_Result.getSheet("Result");
@@ -741,6 +778,46 @@ public class Main {
 			return false;
 		} else if (StringUtils.isBlank(getProp("textfinder.config.path.row"))) {
 			logger.error("Config: Missing textfinder.config.path.row property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("textfinder.config.recursive.col"))) {
+			logger.error("Config: Missing textfinder.config.recursive.col property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("textfinder.config.recursive.row"))) {
+			logger.error("Config: Missing textfinder.config.recursive.row property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("textfinder.config.cond.col"))) {
+			logger.error("Config: Missing textfinder.config.cond.col property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("textfinder.config.cond.row"))) {
+			logger.error("Config: Missing textfinder.config.cond.row property");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if Configuration file is valid for Diff Finder Process
+	 * 
+	 * @return
+	 */
+	private static boolean isValidConfigDiffFinder() {
+
+		// Check if correctly configuration
+		if (StringUtils.isBlank(getProp("difffinder.config.sheet"))) {
+			logger.error("Config: Missing difffinder.config.sheet property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("difffinder.config.path1.col"))) {
+			logger.error("Config: Missing difffinder.config.path1.col property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("difffinder.config.path1.row"))) {
+			logger.error("Config: Missing difffinder.config.path1.row property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("difffinder.config.path2.col"))) {
+			logger.error("Config: Missing difffinder.config.path2.col property");
+			return false;
+		} else if (StringUtils.isBlank(getProp("difffinder.config.path2.row"))) {
+			logger.error("Config: Missing difffinder.config.path2.row property");
 			return false;
 		}
 
