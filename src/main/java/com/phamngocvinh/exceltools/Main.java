@@ -93,7 +93,7 @@ public class Main {
 	/**
 	 * Logger
 	 */
-	private static final int LOG_NUM = 50;
+	private static final int LOG_PAD = 50;
 
 	/**
 	 * Current path
@@ -120,6 +120,16 @@ public class Main {
 	 * Configuration: Search path
 	 */
 	private static String config_search_path = "";
+
+	/**
+	 * Configuration: Compare path 1
+	 */
+	private static String config_diff_path_1 = "";
+
+	/**
+	 * Configuration: Compare path 2
+	 */
+	private static String config_diff_path_2 = "";
 
 	/**
 	 * Configuration: Is Search in Folder
@@ -162,6 +172,11 @@ public class Main {
 	private static boolean isNewVersionExists = false;
 
 	/**
+	 * Process Type
+	 */
+	private static int processType = 0;
+
+	/**
 	 * Main class
 	 * 
 	 * @param args
@@ -173,7 +188,7 @@ public class Main {
 			logger.info("This program comes with ABSOLUTELY NO WARRANTY;");
 			logger.info("This is free software, and you are welcome to redistribute it");
 			logger.info("under certain conditions;");
-			logger.info(StringUtils.rightPad("", LOG_NUM, "="));
+			logger.info(StringUtils.rightPad("", LOG_PAD, "="));
 
 			// Get configuration file
 			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
@@ -185,12 +200,25 @@ public class Main {
 			// Check for new version
 			checkVersion();
 
-			if ("1".equals(args[0])) {
-				RunTextFinder();
-			} else if ("2".equals(args[0])) {
-				RunDiffFinder();
+			// Check if configuration file valid
+			if (!isValidConfig()) {
+				return;
 			}
 
+			// Get process type
+			processType = Integer.parseInt(args[0]);
+
+			if (processType == 1) {
+				RunTextFinder();
+			} else if (processType == 2) {
+				RunDiffFinder();
+			} else {
+				logger.error("Command not found. Please try again.");	
+			}
+
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException: error command argument");
+			return;
 		} catch (FileNotFoundException e) {
 			logger.error("FileNotFoundException: config.properties");
 			return;
@@ -200,14 +228,14 @@ public class Main {
 		} catch (Exception ex) {
 			logger.error("Internal Exception: " + ex.getLocalizedMessage());
 		} finally {
-			logger.info(StringUtils.rightPad("=== END ", LOG_NUM, "="));
+			logger.info(StringUtils.rightPad("=== END ", LOG_PAD, "="));
 			if (isNewVersionExists) {
-				logger.info(StringUtils.rightPad("=== New Version Availiable ", LOG_NUM, "="));
+				logger.info(StringUtils.rightPad("=== New Version Availiable ", LOG_PAD, "="));
 				logger.warn("You're using older version. Please update to the latest version in the link below");
 				logger.info("Current: v" + appVersion);
 				logger.info("Latest: v" + netVersion);
 				logger.info("Official Link: https://github.com/phamngocvinh/excel-tools/releases/tag/v" + netVersion);
-				logger.info(StringUtils.rightPad("", LOG_NUM, "="));
+				logger.info(StringUtils.rightPad("", LOG_PAD, "="));
 			}
 		}
 	}
@@ -216,8 +244,8 @@ public class Main {
 	 * Execute Different Finder Function
 	 */
 	private static void RunDiffFinder() {
-		logger.info(StringUtils.rightPad("=== Diff Finder ", LOG_NUM, "="));
-		logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
+		logger.info(StringUtils.rightPad("=== Diff Finder ", LOG_PAD, "="));
+		logger.info(StringUtils.rightPad("=== START ", LOG_PAD, "="));
 		logger.info("Coming soon... ");
 	}
 
@@ -225,17 +253,17 @@ public class Main {
 	 * Execute Text Finder Function
 	 */
 	private static void RunTextFinder() {
-		logger.info(StringUtils.rightPad("=== Text Finder ", LOG_NUM, "="));
-		logger.info(StringUtils.rightPad("=== START ", LOG_NUM, "="));
+		logger.info(StringUtils.rightPad("=== Text Finder ", LOG_PAD, "="));
+		logger.info(StringUtils.rightPad("=== START ", LOG_PAD, "="));
 
 		// Check if configuration file valid
-		if (!isValidConfig()) {
+		if (!isValidConfigTextFinder()) {
 			return;
 		}
 
 		// Read configuration file
 		try {
-			if (!readConfig()) {
+			if (!readConfigTextFinder()) {
 				return;
 			}
 		} catch (InvalidFormatException e1) {
@@ -511,14 +539,14 @@ public class Main {
 	}
 
 	/**
-	 * Read Configuration File to get settings
+	 * Read Configuration File to get Text Finder settings
 	 * 
 	 * @throws IOException
 	 * @throws InvalidFormatException
 	 * 
 	 * @throws Exception
 	 */
-	private static boolean readConfig() throws InvalidFormatException, IOException {
+	private static boolean readConfigTextFinder() throws InvalidFormatException, IOException {
 
 		// Check if configuration excel exists
 		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
@@ -598,6 +626,81 @@ public class Main {
 	}
 
 	/**
+	 * Read Configuration File to get Diff Finder settings
+	 * 
+	 * @throws IOException
+	 * @throws InvalidFormatException
+	 * 
+	 * @throws Exception
+	 */
+	private static boolean readConfigDiffFinder() throws InvalidFormatException, IOException {
+
+		// Check if configuration excel exists
+		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
+		if (fileWorkBook.exists()) {
+			logger.info("Read config.xlsx");
+		} else {
+			logger.error("Config file not exists");
+			return false;
+		}
+
+		// Open configuration file
+		XSSFWorkbook workbook = new XSSFWorkbook(fileWorkBook);
+
+		// Open configuration sheet
+		XSSFSheet sheet = workbook.getSheet(prop.getProperty("difffinder.config.sheet"));
+
+		// Check if configuration sheet exists
+		if (sheet == null) {
+			logger.error("Config sheet not found");
+			workbook.close();
+			return false;
+		}
+
+		// Get file 1 path
+		int col_Path_1 = Integer.parseInt(getProp("difffinder.config.path1.col")) - 1;
+		int row_Path_1 = Integer.parseInt(getProp("difffinder.config.path1.row")) - 1;
+		config_diff_path_1 = formatter.formatCellValue(sheet.getRow(row_Path_1).getCell(col_Path_1));
+
+		// Check if search path is file or folder
+		Path path = new File(config_diff_path_1).toPath();
+		if (Files.isDirectory(path)) {
+			logger.error("Path 1 is directory");
+			workbook.close();
+			return false;
+		} else if (Files.isRegularFile(path)) {
+			logger.info("Path 1 " + config_diff_path_1);
+		} else {
+			logger.error("Path 1 not exist. Please check config.xlsx");
+			workbook.close();
+			return false;
+		}
+
+		// Get file 2 path
+		int col_Path_2 = Integer.parseInt(getProp("difffinder.config.path2.col")) - 1;
+		int row_Path_2 = Integer.parseInt(getProp("difffinder.config.path2.row")) - 1;
+		config_diff_path_2 = formatter.formatCellValue(sheet.getRow(row_Path_2).getCell(col_Path_2));
+
+		// Check if search path is file or folder
+		path = new File(config_diff_path_2).toPath();
+		if (Files.isDirectory(path)) {
+			logger.error("Path 2 is directory");
+			workbook.close();
+			return false;
+		} else if (Files.isRegularFile(path)) {
+			logger.info("Path 2 " + config_diff_path_2);
+		} else {
+			logger.error("Path 2 not exist. Please check config.xlsx");
+			workbook.close();
+			return false;
+		}
+
+		workbook.close();
+
+		return true;
+	}
+
+	/**
 	 * Check if Configuration file is valid
 	 * 
 	 * @return
@@ -611,7 +714,26 @@ public class Main {
 		} else if (StringUtils.isBlank(getProp("config.file"))) {
 			logger.error("Config: Missing config.file property");
 			return false;
-		} else if (StringUtils.isBlank(getProp("textfinder.config.sheet"))) {
+		}
+
+		// If configuration version different from application version, throw error
+		if (!appVersion.equals(getProp("app.version"))) {
+			logger.error("App Version do not match Config Version");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if Configuration file is valid for Text Finder Process
+	 * 
+	 * @return
+	 */
+	private static boolean isValidConfigTextFinder() {
+
+		// Check if correctly configuration
+		if (StringUtils.isBlank(getProp("textfinder.config.sheet"))) {
 			logger.error("Config: Missing textfinder.config.sheet property");
 			return false;
 		} else if (StringUtils.isBlank(getProp("textfinder.config.path.col"))) {
@@ -619,12 +741,6 @@ public class Main {
 			return false;
 		} else if (StringUtils.isBlank(getProp("textfinder.config.path.row"))) {
 			logger.error("Config: Missing textfinder.config.path.row property");
-			return false;
-		}
-
-		// If configuration version different from application version, throw error
-		if (!appVersion.equals(getProp("app.version"))) {
-			logger.error("App Version do not match Config Version");
 			return false;
 		}
 
