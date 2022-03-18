@@ -205,6 +205,11 @@ public class Main {
 				return;
 			}
 
+			if (args.length == 0) {
+				logger.error("Missing arguments");
+				return;
+			}
+
 			// Get process type
 			processType = Integer.parseInt(args[0]);
 
@@ -326,11 +331,11 @@ public class Main {
 			}
 
 			for (File file : fileList) {
-				doSearch(file);
+				doTextFinder(file);
 			}
 		} else {
 			// If search path is file
-			doSearch(new File(config_search_path));
+			doTextFinder(new File(config_search_path));
 		}
 
 		// Write Search Result
@@ -437,7 +442,7 @@ public class Main {
 	 * @param file File
 	 */
 	@SuppressWarnings("unchecked")
-	private static void doSearch(File file) {
+	private static void doTextFinder(File file) {
 
 		try {
 			Workbook workbook;

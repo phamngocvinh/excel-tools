@@ -6,6 +6,7 @@ Result.xlsx
 *.iml
 /target/
 .project
+/.vscode/
 
 # Compiled class file
 *.class
