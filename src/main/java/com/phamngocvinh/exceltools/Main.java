@@ -270,14 +270,14 @@ public class Main {
 			return;
 		}
 
-		try{
+		try {
 			// Compare sheet counts
 			File baseFile = new File(config_diff_path_1);
 			File compareFile = new File(config_diff_path_2);
-	
+
 			Workbook baseWorkbook;
 			Workbook compareWorkbook;
-	
+
 			String ext = FilenameUtils.getExtension(baseFile.getName());
 			// If Excel 2007 file format
 			if (ext.equals("xlsx")) {
@@ -292,7 +292,7 @@ public class Main {
 				logger.error("File not Supported: " + baseFile.getName() + " -> Ignored");
 				return;
 			}
-	
+
 			ext = FilenameUtils.getExtension(compareFile.getName());
 			// If Excel 2007 file format
 			if (ext.equals("xlsx")) {
@@ -308,7 +308,27 @@ public class Main {
 				baseWorkbook.close();
 				return;
 			}
-	
+
+			// Compare sheet count
+			List<String> listBaseSheet = new LinkedList<String>();
+			List<String> listCompareSheet = new LinkedList<String>();
+			// Loop through all sheets in base workbook
+			for (int idx = 0; idx < baseWorkbook.getNumberOfSheets(); idx++) {
+				// Get base sheet name
+				listBaseSheet.add(baseWorkbook.getSheetAt(idx).getSheetName().trim());
+			}
+
+			// Loop through all sheets in compare workbook
+			for (int idx = 0; idx < compareWorkbook.getNumberOfSheets(); idx++) {
+				// Get base sheet name
+				listCompareSheet.add(compareWorkbook.getSheetAt(idx).getSheetName().trim());
+			}
+
+			if (listBaseSheet.size() != listCompareSheet.size()) {
+				logger.info("Sheet count difference:");
+
+			}
+			
 			// Loop base sheets
 			// Loop base row
 			// Loop base col
@@ -316,15 +336,14 @@ public class Main {
 			baseWorkbook.close();
 			compareWorkbook.close();
 			// Write result
-			
-		} catch (IOException ex){
+
+		} catch (IOException ex) {
 			logger.error("Cannot read file");
 			return;
-		} catch (InvalidFormatException ex){
+		} catch (InvalidFormatException ex) {
 			logger.error("Invalid Format");
 			return;
 		}
-
 
 		// Initialize Result workbook
 		wb_Result = new XSSFWorkbook();
@@ -523,7 +542,7 @@ public class Main {
 
 			logger.info("Searching " + file.getName());
 
-			// Loop though all sheets in workbook
+			// Loop through all sheets in workbook
 			for (int idx = 0; idx < workbook.getNumberOfSheets(); idx++) {
 
 				// Get sheet by index
@@ -532,7 +551,7 @@ public class Main {
 				// Get all shapes
 				getAllShapes((ShapeContainer<XSSFShape>) sheet.getDrawingPatriarch());
 
-				// Loop though all rows
+				// Loop through all rows
 				searchAllRow(file, sheet);
 
 				// Loop through all comments
