@@ -191,7 +191,7 @@ public class Main {
 			logger.info(StringUtils.rightPad("", LOG_PAD, "="));
 
 			// Get configuration file
-			FileInputStream fis = new FileInputStream(new File(dir + "\\" + name_config));
+			FileInputStream fis = new FileInputStream(new File(dir + File.separator + name_config));
 			prop.load(fis);
 
 			// Get application version from properties
@@ -328,7 +328,7 @@ public class Main {
 				logger.info("Sheet count difference:");
 
 			}
-			
+
 			// Loop base sheets
 			// Loop base row
 			// Loop base col
@@ -662,7 +662,7 @@ public class Main {
 	private static boolean readConfigTextFinder() throws InvalidFormatException, IOException {
 
 		// Check if configuration excel exists
-		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
+		File fileWorkBook = new File(dir + File.separator + prop.getProperty("config.file"));
 		if (fileWorkBook.exists()) {
 			logger.info("Read config.xlsx");
 		} else {
