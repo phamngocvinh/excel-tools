@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -325,11 +326,32 @@ public class Main {
 			}
 
 			if (listBaseSheet.size() != listCompareSheet.size()) {
-				logger.info("Sheet count difference:");
-
+				logger.warn("Sheet count difference");
+				logger.warn(String.format("Base sheet count: %s", listBaseSheet.size()));
+				logger.warn(String.format("Compare sheet count: %s", listCompareSheet.size()));
 			}
 
 			// Loop base sheets
+			for (int i = 0; i < listBaseSheet.size(); i++) {
+				if (isSheetExist(compareWorkbook, listBaseSheet.get(i))) {
+					logger.info(String.format("Comparing: %s", listBaseSheet.get(i)));
+
+					Sheet baseSheet = baseWorkbook.getSheet(listBaseSheet.get(i));
+					Sheet compareSheet = compareWorkbook.getSheet(listBaseSheet.get(i));
+					// Loop though all rows
+					for (int rIdx = 0; rIdx < baseSheet.getLastRowNum(); rIdx++) {
+						if (baseSheet.getRow(rIdx + 1) != null) {
+							// Loop though all columns
+							for (int cIdx = 0; cIdx < baseSheet.getRow(rIdx + 1).getLastCellNum(); cIdx++) {
+								// Get cell value
+								String baseCellVal = formatter.formatCellValue(baseSheet.getRow(rIdx + 1).getCell(cIdx));
+								String compareCellVal = formatter.formatCellValue(compareSheet.getRow(rIdx + 1).getCell(cIdx));
+
+							}
+						}
+					}
+				}
+			}
 			// Loop base row
 			// Loop base col
 			// Close workbook
@@ -749,7 +771,7 @@ public class Main {
 	private static boolean readConfigDiffFinder() throws InvalidFormatException, IOException {
 
 		// Check if configuration excel exists
-		File fileWorkBook = new File(dir + prop.getProperty("config.file"));
+		File fileWorkBook = new File(dir + File.separator + prop.getProperty("config.file"));
 		if (fileWorkBook.exists()) {
 			logger.info("Read config.xlsx");
 		} else {
@@ -910,6 +932,24 @@ public class Main {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if sheet exist in workbook
+	 * 
+	 * @param workbook  Workbook
+	 * @param sheetName Sheet Name
+	 * @return
+	 */
+	private static boolean isSheetExist(Workbook workbook, String sheetName) {
+		Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+		while (sheetIterator.hasNext()) {
+			Sheet sheet = sheetIterator.next();
+			if (sheet.getSheetName().equals(sheetName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
